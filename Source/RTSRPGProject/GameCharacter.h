@@ -1,0 +1,41 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "GameUnit.h"
+#include "GameFramework/Character.h"
+#include "GameCharacter.generated.h"
+
+UCLASS()
+class RTSRPGPROJECT_API AGameCharacter : public ACharacter, public IGameUnit
+{
+	GENERATED_BODY()
+
+public:
+	// Sets default values for this character's properties
+	AGameCharacter();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
+
+public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int maxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int attack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int defence;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int attackSpeed;
+
+};
