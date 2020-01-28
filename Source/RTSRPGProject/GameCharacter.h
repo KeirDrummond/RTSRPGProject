@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameUnit.h"
 #include "GameFramework/Character.h"
 #include "GameCharacter.generated.h"
 
-UCLASS()
-class RTSRPGPROJECT_API AGameCharacter : public ACharacter, public IGameUnit
+UCLASS(Blueprintable)
+class RTSRPGPROJECT_API AGameCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -27,7 +26,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
 		int health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int maxHealth;
@@ -37,5 +36,4 @@ public:
 		int defence;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int attackSpeed;
-
 };

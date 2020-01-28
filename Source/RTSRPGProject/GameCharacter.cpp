@@ -2,6 +2,7 @@
 
 
 #include "GameCharacter.h"
+//#include "GenericPlatform/GenericPlatformMath.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -15,7 +16,10 @@ AGameCharacter::AGameCharacter()
 void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (maxHealth != NULL) { maxHealth = 1; }
+	if (maxHealth < 1) { maxHealth = 1; }
+	health = maxHealth;
 }
 
 // Called every frame
@@ -31,4 +35,3 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-
