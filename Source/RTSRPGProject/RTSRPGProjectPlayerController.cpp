@@ -11,6 +11,7 @@ ARTSRPGProjectPlayerController::ARTSRPGProjectPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	bEnableClickEvents = true;
 }
 
 void ARTSRPGProjectPlayerController::PlayerTick(float DeltaTime)
