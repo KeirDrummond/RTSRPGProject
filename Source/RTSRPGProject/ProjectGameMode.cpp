@@ -2,8 +2,11 @@
 
 
 #include "ProjectGameMode.h"
+#include "ProjectPlayerController.h"
+#include "PlayerCamera.h"
 
 AProjectGameMode::AProjectGameMode()
 {
-	
+	PlayerControllerClass = AProjectPlayerController::StaticClass();
+	DefaultPawnClass = APlayerCamera::StaticClass();
 }
