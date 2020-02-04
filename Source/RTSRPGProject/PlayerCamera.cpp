@@ -75,8 +75,11 @@ void APlayerCamera::MoveCamera() {
 		if (posY > (b - 10)) { x = -1; }
 		if (posX < 10) { y = -1; }
 		if (posX > (a - 10)) { y = 1; }
+
+		if (cameraVValue != 0) { x = cameraVValue; }
+		if (cameraHValue != 0) { y = cameraHValue; }
+		
 		FVector movement(x, y, 0);
-		//GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Yellow, FString::Printf(TEXT("x = %f/ y = %f"), x, y));
 		AddMovementInput(movement, 1);
 	}
 }
@@ -85,7 +88,14 @@ void APlayerCamera::ZoomCamera(float AxisValue) {
 	float targetValue = CameraBoom->TargetArmLength + AxisValue;	
 	targetValue = FMath::Clamp(targetValue, minimumZoom, maximumZoom);
 	CameraBoom->TargetArmLength = targetValue;
-	GEngine->AddOnScreenDebugMessage(-10, 1.f, FColor::Yellow, FString::Printf(TEXT("Zoomie %f"), AxisValue));
+}
+
+void APlayerCamera::CameraVertical(float AxisValue) {
+	cameraVValue = AxisValue;
+}
+
+void APlayerCamera::CameraHorizontal(float AxisValue) {
+	cameraHValue = AxisValue;
 }
 
 // Called to bind functionality to input
@@ -94,5 +104,7 @@ void APlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	InputComponent->BindAxis("Zoom", this, &APlayerCamera::ZoomCamera);
+	InputComponent->BindAxis("CameraVertical", this, &APlayerCamera::CameraVertical);
+	InputComponent->BindAxis("CameraHorizontal", this, &APlayerCamera::CameraHorizontal);
 }
 

@@ -53,10 +53,22 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = Camera)
 		float maximumZoom;
 
+	UPROPERTY()
+		float cameraVValue;
+
+	UPROPERTY()
+		float cameraHValue;
+
 	UFUNCTION()
 		void MoveCamera();
 
 	UFUNCTION()
 		void ZoomCamera(float AxisValue);
+
+	UFUNCTION()
+		void CameraVertical(float AxisValue);
+
+	UFUNCTION()
+		void CameraHorizontal(float AxisValue);
 
 };
