@@ -12,7 +12,7 @@
 AProjectPlayerController::AProjectPlayerController()
 {
 	bShowMouseCursor = true;
-	DefaultMouseCursor = EMouseCursor::Crosshairs;
+	//DefaultMouseCursor = EMouseCursor::Crosshairs;
 	bEnableClickEvents = true;
 }
 
@@ -87,4 +87,13 @@ void AProjectPlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
 	bMoveToMouseCursor = false;
+}
+
+bool AProjectPlayerController::AddToSelected(AGameCharacter* unit)
+{
+	if (!IsValid(unit)) { return false; }
+
+	unitArray.Add(unit);
+
+	return true;
 }

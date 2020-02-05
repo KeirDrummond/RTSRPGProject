@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameCharacter.h"
 #include "ProjectPlayerController.generated.h"
 
 /**
@@ -35,4 +36,12 @@ protected:
 	/** Input handlers for SetDestination action. */
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
+
+	TArray<ACharacter*> unitArray;
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	bool AddToSelected(AGameCharacter* unit);
+
 };
