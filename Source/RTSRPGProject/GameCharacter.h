@@ -36,4 +36,24 @@ public:
 		int defence;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int attackSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		bool selected;
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateColour();
+
+	void MoveToPosition(FVector target);
+
+private:
+
+	UFUNCTION(BlueprintCallable)
+		bool AddToSelected();
+
+	UFUNCTION(BlueprintCallable)
+		bool RemoveFromSelected();
+
+	class AProjectPlayerController* playerController;
+	class AAIController* theAIController;
+
 };

@@ -49,7 +49,7 @@ void AProjectPlayerController::MoveToMouseCursor()
 		{
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
 		}
-	}
+	}*/
 
 	// Trace to see what is under the mouse cursor
 	FHitResult Hit;
@@ -59,12 +59,19 @@ void AProjectPlayerController::MoveToMouseCursor()
 	{
 		// We hit something, move there
 		SetNewMoveDestination(Hit.ImpactPoint);
-	}*/
+	}
 }
 
 void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 {
-	APawn* const MyPawn = GetPawn();
+
+	if (unitArray.Num() != 0) {
+		for (AGameCharacter* unit : unitArray) {
+			unit->MoveToPosition(DestLocation);
+		}
+	}
+
+	/*APawn* const MyPawn = GetPawn();
 	if (MyPawn)
 	{
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
@@ -74,7 +81,7 @@ void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 		{
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 		}
-	}
+	}*/
 }
 
 void AProjectPlayerController::OnSetDestinationPressed()
@@ -92,8 +99,31 @@ void AProjectPlayerController::OnSetDestinationReleased()
 bool AProjectPlayerController::AddToSelected(AGameCharacter* unit)
 {
 	if (!IsValid(unit)) { return false; }
+	if (unitArray.Find(unit) != INDEX_NONE) { return false; }
 
 	unitArray.Add(unit);
+	unit->selected = true;
+	unit->UpdateColour();
+
+	return true;
+}
+
+bool AProjectPlayerController::RemoveFromSelected(AGameCharacter* unit)
+{
+	if (!IsValid(unit)) { return false; }
+	if (unitArray.Find(unit) == INDEX_NONE) { return false; }
+
+	unitArray.Remove(unit);
+	unit->selected = false;
+	unit->UpdateColour();
+
+	return true;
+}
+
+bool AProjectPlayerController::RemoveAllFromSelected()
+{
+	for (AGameCharacter* unit : unitArray) { unit->selected = false; unit->UpdateColour(); }
+	unitArray.Empty();
 
 	return true;
 }

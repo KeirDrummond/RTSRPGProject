@@ -33,6 +33,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditDefaultsOnly, Category = Camera)
+		float minimumZoom;
+
+	UPROPERTY(EditDefaultsOnly, Category = Camera)
+		float maximumZoom;
+
+	UPROPERTY(EditDefaultsOnly, Category = Camera)
+		float cameraSpeed;
+
 private:
 
 	/** Top down camera */
@@ -47,28 +56,16 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UDecalComponent* CursorToWorld;
 
-	UPROPERTY(EditDefaultsOnly, Category = Camera)
-		float minimumZoom;
+	float cameraVValue;
 
-	UPROPERTY(EditDefaultsOnly, Category = Camera)
-		float maximumZoom;
+	float cameraHValue;
 
-	UPROPERTY()
-		float cameraVValue;
+	void MoveCamera();
 
-	UPROPERTY()
-		float cameraHValue;
+	void ZoomCamera(float AxisValue);
 
-	UFUNCTION()
-		void MoveCamera();
+	void CameraVertical(float AxisValue);
 
-	UFUNCTION()
-		void ZoomCamera(float AxisValue);
-
-	UFUNCTION()
-		void CameraVertical(float AxisValue);
-
-	UFUNCTION()
-		void CameraHorizontal(float AxisValue);
+	void CameraHorizontal(float AxisValue);
 
 };

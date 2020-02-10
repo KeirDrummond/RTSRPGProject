@@ -37,11 +37,19 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
-	TArray<ACharacter*> unitArray;
+private:
+
+	TArray<AGameCharacter*> unitArray;
 
 public:
 
 	UFUNCTION(BlueprintCallable)
-	bool AddToSelected(AGameCharacter* unit);
+		bool AddToSelected(AGameCharacter* unit);
+
+	UFUNCTION(BlueprintCallable)
+		bool RemoveFromSelected(AGameCharacter* unit);
+
+	UFUNCTION(BlueprintCallable)
+		bool RemoveAllFromSelected();
 
 };
