@@ -37,6 +37,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int attackSpeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Training)
+		float trainingTime;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Training)
+		float cost;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		bool selected;
 

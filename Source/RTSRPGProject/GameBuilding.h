@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameCharacter.h"
+#include "Components/StaticMeshComponent.h"
 #include "GameBuilding.generated.h"
 
 UCLASS(Blueprintable)
@@ -24,7 +25,21 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ObjClass"))
+		AGameCharacter* CreateUnit(TSubclassOf<AGameCharacter> unit);
+
 	UFUNCTION(BlueprintCallable)
-		bool CreateUnit(AGameCharacter* unit);
+		bool AddToQueue(TSoftClassPtr<AGameCharacter> unit);
+
+	float progress;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		class UStaticMeshComponent* mesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		USceneComponent* spawnPoint;
+
+private:
+
 
 };

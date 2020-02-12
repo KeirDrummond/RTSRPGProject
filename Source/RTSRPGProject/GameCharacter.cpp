@@ -26,7 +26,7 @@ void AGameCharacter::BeginPlay()
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
-
+	
 	selected = false;
 }
 

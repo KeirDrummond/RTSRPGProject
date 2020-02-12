@@ -2,12 +2,18 @@
 
 
 #include "GameBuilding.h"
+#include "Engine/World.h"
 
 // Sets default values
 AGameBuilding::AGameBuilding()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	RootComponent = mesh;
+	spawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
+	spawnPoint->AttachTo(mesh);
 
 }
 
@@ -25,8 +31,15 @@ void AGameBuilding::Tick(float DeltaTime)
 
 }
 
-bool AGameBuilding::CreateUnit(AGameCharacter* unit) {
-	if (!IsValid(unit)) { return false; }
+bool AGameBuilding::AddToQueue(TSoftClassPtr<AGameCharacter> unit) {
 
 	return true;
+}
+
+AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
+	FTransform transform = spawnPoint->GetComponentTransform();
+	transform.SetScale3D(FVector(1, 1, 1));
+	FActorSpawnParameters params;
+	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	return GetWorld()->SpawnActor<AGameCharacter>(unit, transform, params);
 }
