@@ -44,16 +44,6 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
-bool AGameCharacter::AddToSelected() {
-	if (!IsValid(playerController)) { return false; }
-	return playerController->AddToSelected(this);
-}
-
-bool AGameCharacter::RemoveFromSelected() {
-	if (!IsValid(playerController)) { return false; }
-	return playerController->RemoveFromSelected(this);
-}
-
 void AGameCharacter::MoveToPosition(const FVector target) {
 
 	float const distance = FVector::Dist(target, GetActorLocation());
@@ -61,4 +51,14 @@ void AGameCharacter::MoveToPosition(const FVector target) {
 	if (distance > 120.0f) {
 		theAIController->MoveToLocation(target);
 	}
+}
+
+bool AGameCharacter::GetIsSelected()
+{
+	return selected;
+}
+
+void AGameCharacter::SetSelected(bool value)
+{
+	selected = value;
 }

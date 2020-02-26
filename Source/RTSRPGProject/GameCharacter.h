@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameUnit.h"
 #include "GameCharacter.generated.h"
 
 UCLASS(Blueprintable)
-class RTSRPGPROJECT_API AGameCharacter : public ACharacter
+class RTSRPGPROJECT_API AGameCharacter : public ACharacter, public IGameUnit
 {
 	GENERATED_BODY()
 
@@ -42,21 +43,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Training)
 		float cost;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		bool selected;
-
-	UFUNCTION(BlueprintImplementableEvent)
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();
 
 	void MoveToPosition(FVector target);
 
+	UFUNCTION(BlueprintPure)
+		bool GetIsSelected();
+
+	void SetSelected(bool value);
+
 private:
 
-	UFUNCTION(BlueprintCallable)
-		bool AddToSelected();
-
-	UFUNCTION(BlueprintCallable)
-		bool RemoveFromSelected();
+	bool selected;
 
 	class AProjectPlayerController* playerController;
 	class AAIController* theAIController;

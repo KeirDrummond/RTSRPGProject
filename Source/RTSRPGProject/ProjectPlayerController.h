@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "GameCharacter.h"
+#include "GameBuilding.h"
 #include "ProjectPlayerController.generated.h"
 
 /**
@@ -21,6 +22,7 @@ public:
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
+	uint32 shiftDown : 1;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
@@ -37,19 +39,21 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
+	void OnShiftDown();
+	void OnShiftUp();
+
+	void OnClick();
+
 private:
 
-	TArray<AGameCharacter*> unitArray;
+	TArray<IGameUnit*> unitArray;
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-		bool AddToSelected(AGameCharacter* unit);
+		bool AddToSelected(IGameUnit* unit);
 
-	UFUNCTION(BlueprintCallable)
-		bool RemoveFromSelected(AGameCharacter* unit);
+		bool RemoveFromSelected(IGameUnit* unit);
 
-	UFUNCTION(BlueprintCallable)
 		bool RemoveAllFromSelected();
 
 };

@@ -8,6 +8,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "RTSRPGProjectCharacter.h"
 #include "Engine/World.h"
+#include "Engine/Engine.h"
 
 AProjectPlayerController::AProjectPlayerController()
 {
@@ -32,10 +33,15 @@ void AProjectPlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	APlayerCamera* playerCamera = Cast<APlayerCamera>(GetPawn());
+	//APlayerCamera* playerCamera = Cast<APlayerCamera>(GetPawn());
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AProjectPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AProjectPlayerController::OnSetDestinationReleased);
+
+	InputComponent->BindAction("Selection", IE_Pressed, this, &AProjectPlayerController::OnClick);
+
+	InputComponent->BindAction("Shift", IE_Pressed, this, &AProjectPlayerController::OnShiftDown);
+	InputComponent->BindAction("Shift", IE_Released, this, &AProjectPlayerController::OnShiftUp);
 }
 
 void AProjectPlayerController::MoveToMouseCursor()
@@ -62,26 +68,25 @@ void AProjectPlayerController::MoveToMouseCursor()
 	}
 }
 
+void AProjectPlayerController::OnClick() {
+	FHitResult hit;
+	GetHitResultUnderCursor(ECC_Visibility, false, hit);
+
+	if (!shiftDown) { RemoveAllFromSelected(); }
+
+	IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
+	if (hitUnit) { AddToSelected(hitUnit); }
+}
+
 void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 {
-
-	if (unitArray.Num() != 0) {
-		for (AGameCharacter* unit : unitArray) {
-			unit->MoveToPosition(DestLocation);
-		}
+	if (unitArray.Num() != 0)
+	for (int32 i = 0; i <= unitArray.Num() - 1; i++)
+	{
+		AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
+		if (IsValid(unit)) { unit->MoveToPosition(DestLocation); }
 	}
 
-	/*APawn* const MyPawn = GetPawn();
-	if (MyPawn)
-	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
-
-		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if ((Distance > 120.0f))
-		{
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-		}
-	}*/
 }
 
 void AProjectPlayerController::OnSetDestinationPressed()
@@ -96,33 +101,52 @@ void AProjectPlayerController::OnSetDestinationReleased()
 	bMoveToMouseCursor = false;
 }
 
-bool AProjectPlayerController::AddToSelected(AGameCharacter* unit)
+void AProjectPlayerController::OnShiftDown()
 {
-	if (!IsValid(unit)) { return false; }
-	if (unitArray.Find(unit) != INDEX_NONE) { return false; }
+	shiftDown = true;
+}
 
-	unitArray.Add(unit);
-	unit->selected = true;
-	unit->UpdateColour();
+void AProjectPlayerController::OnShiftUp()
+{
+	shiftDown = false;
+}
+
+bool AProjectPlayerController::AddToSelected(IGameUnit* unit)
+{
+	UObject* theUnit = unit->_getUObject();
+	if (!theUnit->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
+
+	if (!shiftDown) { RemoveAllFromSelected(); }
+
+	AGameCharacter* character = Cast<AGameCharacter>(unit);
+	if (character) { unitArray.Add(unit); character->SetSelected(true); }
+	AGameBuilding* building = Cast<AGameBuilding>(unit);
+	if (building) { building->SetSelected(true); }
+
+	IGameUnit::Execute_UpdateColour(theUnit);
 
 	return true;
 }
 
-bool AProjectPlayerController::RemoveFromSelected(AGameCharacter* unit)
+bool AProjectPlayerController::RemoveFromSelected(IGameUnit* unit)
 {
-	if (!IsValid(unit)) { return false; }
-	if (unitArray.Find(unit) == INDEX_NONE) { return false; }
+	UObject* theUnit = unit->_getUObject();
+	if (!unit->_getUObject()->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
 
-	unitArray.Remove(unit);
-	unit->selected = false;
-	unit->UpdateColour();
+	AGameCharacter* character = Cast<AGameCharacter>(unit);
+	if (character) { unitArray.Remove(character); character->SetSelected(false); }
+	AGameBuilding* building = Cast<AGameBuilding>(unit);
+	if (building) { building->SetSelected(false); }
+
+	IGameUnit::Execute_UpdateColour(theUnit);
 
 	return true;
 }
 
 bool AProjectPlayerController::RemoveAllFromSelected()
 {
-	for (AGameCharacter* unit : unitArray) { unit->selected = false; unit->UpdateColour(); }
+	for (int32 i = unitArray.Num() - 1; i >= 0; i--) { 
+		RemoveFromSelected(unitArray[i]); }
 	unitArray.Empty();
 
 	return true;
