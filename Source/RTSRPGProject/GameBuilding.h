@@ -45,7 +45,8 @@ public:
 
 	void OnClick();
 
-	bool GetIsSelected();
+	UFUNCTION(BlueprintPure)
+		bool GetIsSelected();
 
 	void SetSelected(bool value);
 

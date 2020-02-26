@@ -119,9 +119,11 @@ bool AProjectPlayerController::AddToSelected(IGameUnit* unit)
 	if (!shiftDown) { RemoveAllFromSelected(); }
 
 	AGameCharacter* character = Cast<AGameCharacter>(unit);
-	if (character) { unitArray.Add(unit); character->SetSelected(true); }
+	if (character) { character->SetSelected(true); }
 	AGameBuilding* building = Cast<AGameBuilding>(unit);
 	if (building) { building->SetSelected(true); }
+
+	unitArray.Add(unit);
 
 	IGameUnit::Execute_UpdateColour(theUnit);
 
@@ -134,9 +136,11 @@ bool AProjectPlayerController::RemoveFromSelected(IGameUnit* unit)
 	if (!unit->_getUObject()->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
 
 	AGameCharacter* character = Cast<AGameCharacter>(unit);
-	if (character) { unitArray.Remove(character); character->SetSelected(false); }
+	if (character) { character->SetSelected(false); }
 	AGameBuilding* building = Cast<AGameBuilding>(unit);
 	if (building) { building->SetSelected(false); }
+
+	unitArray.Add(unit);
 
 	IGameUnit::Execute_UpdateColour(theUnit);
 
