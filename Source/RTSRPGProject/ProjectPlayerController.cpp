@@ -9,6 +9,7 @@
 #include "RTSRPGProjectCharacter.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
+#include "GameHUD.h"
 
 AProjectPlayerController::AProjectPlayerController()
 {
@@ -76,6 +77,8 @@ void AProjectPlayerController::OnClick() {
 
 	IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
 	if (hitUnit) { AddToSelected(hitUnit); }
+
+	UpdateDisplay();
 }
 
 void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
@@ -140,7 +143,7 @@ bool AProjectPlayerController::RemoveFromSelected(IGameUnit* unit)
 	AGameBuilding* building = Cast<AGameBuilding>(unit);
 	if (building) { building->SetSelected(false); }
 
-	unitArray.Add(unit);
+	unitArray.Remove(unit);
 
 	IGameUnit::Execute_UpdateColour(theUnit);
 
@@ -154,4 +157,24 @@ bool AProjectPlayerController::RemoveAllFromSelected()
 	unitArray.Empty();
 
 	return true;
+}
+
+void AProjectPlayerController::UpdateDisplay()
+{
+	AGameHUD* theHUD = Cast<AGameHUD>(MyHUD);
+	
+	if (unitArray.Num() != 0) {
+		displayedUnit = unitArray[0];
+		for (IGameUnit* unit : unitArray)
+		{
+			if (Cast<AGameBuilding>(unit->_getUObject())) { displayedUnit = unit; break; }
+		}
+	}
+	else { displayedUnit = NULL; theHUD->DisplayNothing(); }
+
+	AGameCharacter* cUnit = Cast<AGameCharacter>(displayedUnit);
+	if (cUnit) { theHUD->DisplayCharacter(cUnit); }
+	AGameBuilding* bUnit = Cast<AGameBuilding>(displayedUnit);
+	if (bUnit) { theHUD->DisplayBuilding(bUnit); }
+
 }

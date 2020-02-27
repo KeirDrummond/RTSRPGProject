@@ -27,6 +27,8 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
+		FString name;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
 		int health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)

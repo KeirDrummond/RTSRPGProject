@@ -48,12 +48,14 @@ private:
 
 	TArray<IGameUnit*> unitArray;
 
+	IGameUnit* displayedUnit;
+
 public:
 
-		bool AddToSelected(IGameUnit* unit);
+	bool AddToSelected(IGameUnit* unit);
+	bool RemoveFromSelected(IGameUnit* unit);
+	bool RemoveAllFromSelected();
 
-		bool RemoveFromSelected(IGameUnit* unit);
-
-		bool RemoveAllFromSelected();
+	void UpdateDisplay();
 
 };
