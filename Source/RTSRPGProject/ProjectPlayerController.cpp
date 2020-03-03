@@ -162,7 +162,7 @@ bool AProjectPlayerController::RemoveAllFromSelected()
 void AProjectPlayerController::UpdateDisplay()
 {
 	AGameHUD* theHUD = Cast<AGameHUD>(MyHUD);
-	
+
 	if (unitArray.Num() != 0) {
 		displayedUnit = unitArray[0];
 		for (IGameUnit* unit : unitArray)
@@ -172,9 +172,12 @@ void AProjectPlayerController::UpdateDisplay()
 	}
 	else { displayedUnit = NULL; theHUD->DisplayNothing(); }
 
-	AGameCharacter* cUnit = Cast<AGameCharacter>(displayedUnit);
-	if (cUnit) { theHUD->DisplayCharacter(cUnit); }
-	AGameBuilding* bUnit = Cast<AGameBuilding>(displayedUnit);
-	if (bUnit) { theHUD->DisplayBuilding(bUnit); }
+	if (displayedUnit != NULL)
+	{
+		if (displayedUnit->_getUObject()->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
+		{
+			IGameUnit::Execute_OnDisplay(displayedUnit->_getUObject());
+		}
+	}
 
 }

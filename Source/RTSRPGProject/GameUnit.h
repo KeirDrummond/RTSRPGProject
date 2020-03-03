@@ -26,6 +26,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();
 
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDisplay();
+
 	virtual bool GetIsSelected();
 	virtual void SetSelected(bool value);
 
