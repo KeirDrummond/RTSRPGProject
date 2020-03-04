@@ -6,6 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "GameCharacter.h"
 #include "GameBuilding.h"
+#include "GameUnit.h"
 #include "GameHUD.generated.h"
 
 /**
@@ -20,6 +21,10 @@ public:
 
 	AGameHUD();
 
+protected:
+
+	void DrawHUD() override;
+
 public:
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -31,6 +36,15 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void DisplayNothing();
 
+	void DrawBox();
+
+	bool drawBox;
+
+	FVector2D boxOrigin;
+	FVector2D boxEnd;
+
+private:
+
+	TArray<AActor*> unitsFound;
+
 };
-
-

@@ -18,6 +18,11 @@ AProjectPlayerController::AProjectPlayerController()
 	bEnableClickEvents = true;
 }
 
+void AProjectPlayerController::BeginPlay()
+{
+	theHUD = Cast<AGameHUD>(MyHUD);
+}
+
 void AProjectPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
@@ -27,6 +32,14 @@ void AProjectPlayerController::PlayerTick(float DeltaTime)
 	{
 		MoveToMouseCursor();
 	}
+
+	if (drawingBox)
+	{
+		theHUD->boxEnd = GetCursorPosition();
+		theHUD->drawBox = true;
+	}
+	else { theHUD->drawBox = false; }
+
 }
 
 void AProjectPlayerController::SetupInputComponent()
@@ -39,7 +52,8 @@ void AProjectPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AProjectPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AProjectPlayerController::OnSetDestinationReleased);
 
-	InputComponent->BindAction("Selection", IE_Pressed, this, &AProjectPlayerController::OnClick);
+	InputComponent->BindAction("Selection", IE_Pressed, this, &AProjectPlayerController::OnClickPressed);
+	InputComponent->BindAction("Selection", IE_Released, this, &AProjectPlayerController::OnClickReleased);
 
 	InputComponent->BindAction("Shift", IE_Pressed, this, &AProjectPlayerController::OnShiftDown);
 	InputComponent->BindAction("Shift", IE_Released, this, &AProjectPlayerController::OnShiftUp);
@@ -69,16 +83,47 @@ void AProjectPlayerController::MoveToMouseCursor()
 	}
 }
 
-void AProjectPlayerController::OnClick() {
-	FHitResult hit;
-	GetHitResultUnderCursor(ECC_Visibility, false, hit);
+void AProjectPlayerController::OnClickPressed() {
 
-	if (!shiftDown) { RemoveAllFromSelected(); }
+	theHUD->boxOrigin = GetCursorPosition();
+	boxOrigin = GetCursorPosition();
+	drawingBox = true;
+}
 
-	IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
-	if (hitUnit) { AddToSelected(hitUnit); }
+void AProjectPlayerController::OnClickReleased() {
+	drawingBox = false;
+	boxEnd = GetCursorPosition();
+
+	if (FVector2D::Distance(boxOrigin, boxEnd) < 1.0f) {
+		FHitResult hit;
+		GetHitResultUnderCursor(ECC_Visibility, false, hit);
+
+		if (!shiftDown) { RemoveAllFromSelected(); }
+
+		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
+		if (hitUnit) { AddToSelected(hitUnit); }
+	}
+	else
+	{
+		if (!shiftDown) { RemoveAllFromSelected(); }
+
+		if (unitsFound.Num() > 0) {
+			for (AActor* unit : unitsFound) {
+				IGameUnit* theUnit = Cast<IGameUnit>(unit);
+				if (theUnit) { AddToSelected(theUnit); }
+			}
+		}
+	}
 
 	UpdateDisplay();
+}
+
+FVector2D AProjectPlayerController::GetCursorPosition() {
+	float x;
+	float y;
+	GetMousePosition(x, y);
+	
+	return FVector2D(x, y);
 }
 
 void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
@@ -119,8 +164,6 @@ bool AProjectPlayerController::AddToSelected(IGameUnit* unit)
 	UObject* theUnit = unit->_getUObject();
 	if (!theUnit->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
 
-	if (!shiftDown) { RemoveAllFromSelected(); }
-
 	AGameCharacter* character = Cast<AGameCharacter>(unit);
 	if (character) { character->SetSelected(true); }
 	AGameBuilding* building = Cast<AGameBuilding>(unit);
@@ -159,10 +202,14 @@ bool AProjectPlayerController::RemoveAllFromSelected()
 	return true;
 }
 
+void AProjectPlayerController::UnitsInBox(TArray<AActor*> units)
+{
+	unitsFound.Empty();
+	unitsFound = units;
+}
+
 void AProjectPlayerController::UpdateDisplay()
 {
-	AGameHUD* theHUD = Cast<AGameHUD>(MyHUD);
-
 	if (unitArray.Num() != 0) {
 		displayedUnit = unitArray[0];
 		for (IGameUnit* unit : unitArray)

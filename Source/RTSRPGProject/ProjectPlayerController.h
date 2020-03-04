@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GameHUD.h"
 #include "GameCharacter.h"
 #include "GameBuilding.h"
 #include "ProjectPlayerController.generated.h"
@@ -23,9 +24,11 @@ protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 	uint32 shiftDown : 1;
+	uint32 drawingBox : 1;
 
 	// Begin PlayerController interface
 	virtual void PlayerTick(float DeltaTime) override;
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 	// End PlayerController interface
 
@@ -42,7 +45,10 @@ protected:
 	void OnShiftDown();
 	void OnShiftUp();
 
-	void OnClick();
+	void OnClickPressed();
+	void OnClickReleased();
+
+	FVector2D GetCursorPosition();
 
 private:
 
@@ -50,11 +56,19 @@ private:
 
 	IGameUnit* displayedUnit;
 
+	AGameHUD* theHUD;
+
+	FVector2D boxOrigin;
+	FVector2D boxEnd;
+	TArray<AActor*> unitsFound;
+
 public:
 
 	bool AddToSelected(IGameUnit* unit);
 	bool RemoveFromSelected(IGameUnit* unit);
 	bool RemoveAllFromSelected();
+
+	void UnitsInBox(TArray<AActor*> units);
 
 	void UpdateDisplay();
 
