@@ -8,12 +8,19 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "RTSRPGProjectCharacter.h"
 #include "Engine/World.h"
+#include "Engine/Engine.h"
+#include "GameHUD.h"
 
 AProjectPlayerController::AProjectPlayerController()
 {
 	bShowMouseCursor = true;
 	//DefaultMouseCursor = EMouseCursor::Crosshairs;
 	bEnableClickEvents = true;
+}
+
+void AProjectPlayerController::BeginPlay()
+{
+	theHUD = Cast<AGameHUD>(MyHUD);
 }
 
 void AProjectPlayerController::PlayerTick(float DeltaTime)
@@ -25,6 +32,14 @@ void AProjectPlayerController::PlayerTick(float DeltaTime)
 	{
 		MoveToMouseCursor();
 	}
+
+	if (drawingBox)
+	{
+		theHUD->boxEnd = GetCursorPosition();
+		theHUD->drawBox = true;
+	}
+	else { theHUD->drawBox = false; }
+
 }
 
 void AProjectPlayerController::SetupInputComponent()
@@ -32,10 +47,16 @@ void AProjectPlayerController::SetupInputComponent()
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
 
-	APlayerCamera* playerCamera = Cast<APlayerCamera>(GetPawn());
+	//APlayerCamera* playerCamera = Cast<APlayerCamera>(GetPawn());
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AProjectPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AProjectPlayerController::OnSetDestinationReleased);
+
+	InputComponent->BindAction("Selection", IE_Pressed, this, &AProjectPlayerController::OnClickPressed);
+	InputComponent->BindAction("Selection", IE_Released, this, &AProjectPlayerController::OnClickReleased);
+
+	InputComponent->BindAction("Shift", IE_Pressed, this, &AProjectPlayerController::OnShiftDown);
+	InputComponent->BindAction("Shift", IE_Released, this, &AProjectPlayerController::OnShiftUp);
 }
 
 void AProjectPlayerController::MoveToMouseCursor()
@@ -62,26 +83,58 @@ void AProjectPlayerController::MoveToMouseCursor()
 	}
 }
 
-void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
-{
+void AProjectPlayerController::OnClickPressed() {
 
-	if (unitArray.Num() != 0) {
-		for (AGameCharacter* unit : unitArray) {
-			unit->MoveToPosition(DestLocation);
+	theHUD->boxOrigin = GetCursorPosition();
+	boxOrigin = GetCursorPosition();
+	drawingBox = true;
+}
+
+void AProjectPlayerController::OnClickReleased() {
+	drawingBox = false;
+	boxEnd = GetCursorPosition();
+
+	if (FVector2D::Distance(boxOrigin, boxEnd) < 1.0f) {
+		FHitResult hit;
+		GetHitResultUnderCursor(ECC_Visibility, false, hit);
+
+		if (!shiftDown) { RemoveAllFromSelected(); }
+
+		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
+		if (hitUnit) { AddToSelected(hitUnit); }
+	}
+	else
+	{
+		if (!shiftDown) { RemoveAllFromSelected(); }
+
+		if (unitsFound.Num() > 0) {
+			for (AActor* unit : unitsFound) {
+				IGameUnit* theUnit = Cast<IGameUnit>(unit);
+				if (theUnit) { AddToSelected(theUnit); }
+			}
 		}
 	}
 
-	/*APawn* const MyPawn = GetPawn();
-	if (MyPawn)
-	{
-		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
+	UpdateDisplay();
+}
 
-		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if ((Distance > 120.0f))
-		{
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-		}
-	}*/
+FVector2D AProjectPlayerController::GetCursorPosition() {
+	float x;
+	float y;
+	GetMousePosition(x, y);
+	
+	return FVector2D(x, y);
+}
+
+void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
+{
+	if (unitArray.Num() != 0)
+	for (int32 i = 0; i <= unitArray.Num() - 1; i++)
+	{
+		AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
+		if (IsValid(unit)) { unit->MoveToPosition(DestLocation); }
+	}
+
 }
 
 void AProjectPlayerController::OnSetDestinationPressed()
@@ -96,34 +149,82 @@ void AProjectPlayerController::OnSetDestinationReleased()
 	bMoveToMouseCursor = false;
 }
 
-bool AProjectPlayerController::AddToSelected(AGameCharacter* unit)
+void AProjectPlayerController::OnShiftDown()
 {
-	if (!IsValid(unit)) { return false; }
-	if (unitArray.Find(unit) != INDEX_NONE) { return false; }
+	shiftDown = true;
+}
+
+void AProjectPlayerController::OnShiftUp()
+{
+	shiftDown = false;
+}
+
+bool AProjectPlayerController::AddToSelected(IGameUnit* unit)
+{
+	UObject* theUnit = unit->_getUObject();
+	if (!theUnit->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
+
+	AGameCharacter* character = Cast<AGameCharacter>(unit);
+	if (character) { character->SetSelected(true); }
+	AGameBuilding* building = Cast<AGameBuilding>(unit);
+	if (building) { building->SetSelected(true); }
 
 	unitArray.Add(unit);
-	unit->selected = true;
-	unit->UpdateColour();
+
+	IGameUnit::Execute_UpdateColour(theUnit);
 
 	return true;
 }
 
-bool AProjectPlayerController::RemoveFromSelected(AGameCharacter* unit)
+bool AProjectPlayerController::RemoveFromSelected(IGameUnit* unit)
 {
-	if (!IsValid(unit)) { return false; }
-	if (unitArray.Find(unit) == INDEX_NONE) { return false; }
+	UObject* theUnit = unit->_getUObject();
+	if (!unit->_getUObject()->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
+
+	AGameCharacter* character = Cast<AGameCharacter>(unit);
+	if (character) { character->SetSelected(false); }
+	AGameBuilding* building = Cast<AGameBuilding>(unit);
+	if (building) { building->SetSelected(false); }
 
 	unitArray.Remove(unit);
-	unit->selected = false;
-	unit->UpdateColour();
+
+	IGameUnit::Execute_UpdateColour(theUnit);
 
 	return true;
 }
 
 bool AProjectPlayerController::RemoveAllFromSelected()
 {
-	for (AGameCharacter* unit : unitArray) { unit->selected = false; unit->UpdateColour(); }
+	for (int32 i = unitArray.Num() - 1; i >= 0; i--) { 
+		RemoveFromSelected(unitArray[i]); }
 	unitArray.Empty();
 
 	return true;
+}
+
+void AProjectPlayerController::UnitsInBox(TArray<AActor*> units)
+{
+	unitsFound.Empty();
+	unitsFound = units;
+}
+
+void AProjectPlayerController::UpdateDisplay()
+{
+	if (unitArray.Num() != 0) {
+		displayedUnit = unitArray[0];
+		for (IGameUnit* unit : unitArray)
+		{
+			if (Cast<AGameBuilding>(unit->_getUObject())) { displayedUnit = unit; break; }
+		}
+	}
+	else { displayedUnit = NULL; theHUD->DisplayNothing(); }
+
+	if (displayedUnit != NULL)
+	{
+		if (displayedUnit->_getUObject()->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
+		{
+			IGameUnit::Execute_OnDisplay(displayedUnit->_getUObject());
+		}
+	}
+
 }

@@ -25,7 +25,7 @@ APlayerCamera::APlayerCamera()
 	PrimaryActorTick.bCanEverTick = true;
 
 	minimumZoom = 500.0f;
-	maximumZoom = 1000.0f;
+	maximumZoom = 2000.0f;
 
 	cameraSpeed = 2.0f;
 

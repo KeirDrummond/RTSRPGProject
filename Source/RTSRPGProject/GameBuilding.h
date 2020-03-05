@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameUnit.h"
 #include "GameCharacter.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameBuilding.generated.h"
 
 UCLASS(Blueprintable)
-class RTSRPGPROJECT_API AGameBuilding : public AActor
+class RTSRPGPROJECT_API AGameBuilding : public AActor, public IGameUnit
 {
 	GENERATED_BODY()
 	
@@ -39,7 +40,18 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USceneComponent* spawnPoint;
 
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateColour();
+
+	void OnClick();
+
+	UFUNCTION(BlueprintPure)
+		bool GetIsSelected();
+
+	void SetSelected(bool value);
+
 private:
 
+	bool selected;
 
 };

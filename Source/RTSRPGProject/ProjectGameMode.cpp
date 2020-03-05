@@ -13,7 +13,7 @@ AProjectGameMode::AProjectGameMode()
 	DefaultPawnClass = APlayerCamera::StaticClass();
 
 	// set default pawn class to our Blueprinted character
-	static ConstructorHelpers::FClassFinder<AHUD> PlayerHUDBPClass(TEXT("/Game/HUD"));
+	static ConstructorHelpers::FClassFinder<AHUD> PlayerHUDBPClass(TEXT("/Game/UserInterface/TheHUD"));
 	if (PlayerHUDBPClass.Class != NULL)
 	{
 		HUDClass = PlayerHUDBPClass.Class;

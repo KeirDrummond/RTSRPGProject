@@ -13,7 +13,7 @@ AGameBuilding::AGameBuilding()
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = mesh;
 	spawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
-	spawnPoint->AttachTo(mesh);
+	spawnPoint->AttachToComponent(mesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 }
 
@@ -34,6 +34,20 @@ void AGameBuilding::Tick(float DeltaTime)
 bool AGameBuilding::AddToQueue(TSoftClassPtr<AGameCharacter> unit) {
 
 	return true;
+}
+
+void AGameBuilding::OnClick()
+{
+}
+
+bool AGameBuilding::GetIsSelected()
+{
+	return selected;
+}
+
+void AGameBuilding::SetSelected(bool value)
+{
+	selected = value;
 }
 
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
