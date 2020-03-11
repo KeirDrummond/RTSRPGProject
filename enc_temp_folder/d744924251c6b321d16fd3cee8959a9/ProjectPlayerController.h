@@ -62,8 +62,6 @@ private:
 	FVector2D boxEnd;
 	TArray<AActor*> unitsFound;
 
-	TArray<AGameCharacter*> army;
-
 public:
 
 	bool AddToSelected(IGameUnit* unit);
@@ -74,18 +72,10 @@ public:
 
 	void UpdateDisplay();
 
-	bool AddToArmy(AGameCharacter* unit);
-	bool RemoveFromArmy(AGameCharacter* unit);
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 		bool SpendResources(int cost);
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY()
 		int resources;
-
-	UPROPERTY(EditInstanceOnly)
-		float armyPower;
-
-	void UpdateArmyPower();
 
 };

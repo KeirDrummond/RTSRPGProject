@@ -21,6 +21,8 @@ AProjectPlayerController::AProjectPlayerController()
 void AProjectPlayerController::BeginPlay()
 {
 	theHUD = Cast<AGameHUD>(MyHUD);
+
+	UpdateArmyPower();
 }
 
 void AProjectPlayerController::PlayerTick(float DeltaTime)
@@ -233,4 +235,32 @@ bool AProjectPlayerController::SpendResources(int cost) {
 	if (resources < cost) { return false; }
 	resources = resources - cost;
 	return true;
+}
+
+bool AProjectPlayerController::AddToArmy(AGameCharacter* unit)
+{
+	if (!IsValid(unit)) { return false; }
+
+	army.Add(unit);
+
+	return true;
+}
+
+bool AProjectPlayerController::RemoveFromArmy(AGameCharacter* unit)
+{
+	if (!IsValid(unit)) { return false; }
+
+	army.Remove(unit);
+
+	return true;
+}
+
+void AProjectPlayerController::UpdateArmyPower() {
+
+	armyPower = 0;
+
+	for (AGameCharacter* unit : army)
+	{
+		armyPower += unit->power;
+	}
 }
