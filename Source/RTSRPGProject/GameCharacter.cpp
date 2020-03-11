@@ -27,6 +27,8 @@ void AGameCharacter::BeginPlay()
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
 	
+	power = CalculatePower();
+
 	selected = false;
 }
 
@@ -66,4 +68,9 @@ void AGameCharacter::SetSelected(bool value)
 void AGameCharacter::AttackTarget(UObject* target)
 {
 
+}
+
+float AGameCharacter::CalculatePower()
+{
+	return basePower;
 }

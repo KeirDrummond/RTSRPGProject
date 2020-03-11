@@ -38,6 +38,8 @@ public:
 		PlayerID owningPlayer;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
+		float basePower;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
 		int32 health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
@@ -64,11 +66,15 @@ public:
 
 	void SetSelected(bool value);
 
+	float power;
+
 private:
 
 	bool selected;
 
 	class AProjectPlayerController* playerController;
 	class AAIController* theAIController;
+
+	float CalculatePower();
 
 };
