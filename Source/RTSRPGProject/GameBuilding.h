@@ -26,6 +26,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
+		PlayerID owningPlayer;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
+		FString name;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
+		int health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int maxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		int defence;
+
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ObjClass"))
 		AGameCharacter* CreateUnit(TSubclassOf<AGameCharacter> unit);
 

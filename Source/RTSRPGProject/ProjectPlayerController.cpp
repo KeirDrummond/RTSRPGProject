@@ -109,7 +109,7 @@ void AProjectPlayerController::OnClickReleased() {
 
 		if (unitsFound.Num() > 0) {
 			for (AActor* unit : unitsFound) {
-				IGameUnit* theUnit = Cast<IGameUnit>(unit);
+				AGameCharacter* theUnit = Cast<AGameCharacter>(unit);
 				if (theUnit) { AddToSelected(theUnit); }
 			}
 		}
@@ -227,4 +227,10 @@ void AProjectPlayerController::UpdateDisplay()
 		}
 	}
 
+}
+
+bool AProjectPlayerController::SpendResources(int cost) {
+	if (resources < cost) { return false; }
+	resources = resources - cost;
+	return true;
 }

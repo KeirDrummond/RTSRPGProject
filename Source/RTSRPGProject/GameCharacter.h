@@ -7,6 +7,13 @@
 #include "GameUnit.h"
 #include "GameCharacter.generated.h"
 
+UENUM(BlueprintType)
+enum class PlayerID : uint8
+{
+	Player1 UMETA(DisplayName = "Player 1"),
+	Player2 UMETA(DisplayName = "Player 2")
+};
+
 UCLASS(Blueprintable)
 class RTSRPGPROJECT_API AGameCharacter : public ACharacter, public IGameUnit
 {
@@ -27,23 +34,25 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
+		PlayerID owningPlayer;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
-		int health;
+		int32 health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
-		int maxHealth;
+		int32 maxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
-		int attack;
+		int32 attack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
-		int defence;
+		int32 defence;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
-		int attackSpeed;
+		int32 attackSpeed;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+		float attackRange;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Training)
-		float trainingTime;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Training)
-		float cost;
+	UFUNCTION(BlueprintCallable)
+		void AttackTarget(UObject* target);
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();

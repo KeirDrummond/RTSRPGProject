@@ -72,4 +72,10 @@ public:
 
 	void UpdateDisplay();
 
+	UFUNCTION()
+		bool SpendResources(int cost);
+
+	UPROPERTY()
+		int resources;
+
 };

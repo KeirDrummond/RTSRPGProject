@@ -62,3 +62,8 @@ void AGameCharacter::SetSelected(bool value)
 {
 	selected = value;
 }
+
+void AGameCharacter::AttackTarget(UObject* target)
+{
+
+}
