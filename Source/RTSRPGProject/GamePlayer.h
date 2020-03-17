@@ -7,8 +7,8 @@
 #include "GamePlayer.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
-class UGamePlayer : public UInterface
+UINTERFACE(BlueprintType)
+class RTSRPGPROJECT_API UGamePlayer : public UInterface
 {
 	GENERATED_BODY()
 };

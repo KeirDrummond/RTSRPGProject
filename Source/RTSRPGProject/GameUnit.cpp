@@ -5,6 +5,11 @@
 
 // Add default functionality here for any IGameUnit functions that are not pure virtual.
 
+AController* IGameUnit::GetOwningPlayer()
+{
+	return nullptr;
+}
+
 bool IGameUnit::GetIsSelected()
 {
 	return false;
@@ -14,3 +19,4 @@ void IGameUnit::SetSelected(bool value)
 {
 
 }
+

@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "GameFramework/Controller.h"
 #include "GameUnit.generated.h"
 
 // This class does not need to be modified.
@@ -29,6 +30,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnDisplay();
 
+	virtual AController* GetOwningPlayer();
 	virtual bool GetIsSelected();
 	virtual void SetSelected(bool value);
 

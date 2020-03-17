@@ -7,13 +7,16 @@
 #include "GameHUD.h"
 #include "GameCharacter.h"
 #include "GameBuilding.h"
+#include "GamePlayer.h"
+#include "ProjectGameMode.h"
+#include "GameFramework/Controller.h"
 #include "ProjectPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RTSRPGPROJECT_API AProjectPlayerController : public APlayerController
+class RTSRPGPROJECT_API AProjectPlayerController : public APlayerController, public IGamePlayer
 {
 	GENERATED_BODY()
 	

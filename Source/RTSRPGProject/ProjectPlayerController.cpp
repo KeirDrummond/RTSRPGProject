@@ -10,6 +10,7 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "GameHUD.h"
+#include "ProjectGameMode.h"
 
 AProjectPlayerController::AProjectPlayerController()
 {
@@ -20,6 +21,8 @@ AProjectPlayerController::AProjectPlayerController()
 
 void AProjectPlayerController::BeginPlay()
 {
+	Super::BeginPlay();
+
 	theHUD = Cast<AGameHUD>(MyHUD);
 
 	UpdateArmyPower();
@@ -103,7 +106,10 @@ void AProjectPlayerController::OnClickReleased() {
 		if (!shiftDown) { RemoveAllFromSelected(); }
 
 		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
-		if (hitUnit) { AddToSelected(hitUnit); }
+		if (hitUnit) {
+			if (hitUnit->GetOwningPlayer() == this)
+			AddToSelected(hitUnit);
+		}
 	}
 	else
 	{
@@ -112,7 +118,10 @@ void AProjectPlayerController::OnClickReleased() {
 		if (unitsFound.Num() > 0) {
 			for (AActor* unit : unitsFound) {
 				AGameCharacter* theUnit = Cast<AGameCharacter>(unit);
-				if (theUnit) { AddToSelected(theUnit); }
+				if (theUnit) {
+					if (theUnit->GetOwningPlayer() == this)
+						AddToSelected(theUnit);
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GamePlayer.h"
 #include "GameFramework/GameModeBase.h"
 #include "ProjectGameMode.generated.h"
 
@@ -16,4 +17,16 @@ class RTSRPGPROJECT_API AProjectGameMode : public AGameModeBase
 	
 public:
 	AProjectGameMode();
+
+	UFUNCTION(BlueprintPure)
+	TArray<AController*> GetPlayerList();
+	AController* GetPlayer(int value);
+
+protected:
+
+	virtual void BeginPlay() override;
+
+	TSubclassOf<APawn> AIPlayer;
+	TArray<AController*> playerList;
+
 };

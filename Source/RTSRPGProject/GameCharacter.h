@@ -35,7 +35,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
-		PlayerID owningPlayer;
+		int32 defaultOwner;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
+		AController* owningPlayer;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
@@ -64,6 +66,7 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
 
+	AController* GetOwningPlayer();
 	void SetSelected(bool value);
 
 	float power;

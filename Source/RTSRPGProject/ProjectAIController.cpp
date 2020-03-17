@@ -2,4 +2,11 @@
 
 
 #include "ProjectAIController.h"
+#include "ProjectGameMode.h"
+#include "Engine/World.h"
+#include "Engine/Engine.h"
 
+void AProjectAIController::BeginPlay() {
+
+	Super::BeginPlay();
+}
