@@ -5,6 +5,7 @@
 #include "ProjectPlayerController.h"
 #include "Engine.h"
 #include "AIController.h"
+#include "GameFramework/GameMode.h"
 //#include "GenericPlatform/GenericPlatformMath.h"
 
 // Sets default values
@@ -12,7 +13,7 @@ AGameCharacter::AGameCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	defaultOwner = 0;
 }
 
 // Called when the game starts or when spawned
@@ -23,10 +24,15 @@ void AGameCharacter::BeginPlay()
 	playerController = Cast<AProjectPlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
 	theAIController = Cast<AAIController>(GetController());
 
+	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
+	owningPlayer = gamemode->GetPlayer(defaultOwner);
+
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
 	
+	power = CalculatePower();
+
 	selected = false;
 }
 
@@ -58,6 +64,11 @@ bool AGameCharacter::GetIsSelected()
 	return selected;
 }
 
+AController* AGameCharacter::GetOwningPlayer()
+{
+	return owningPlayer;
+}
+
 void AGameCharacter::SetSelected(bool value)
 {
 	selected = value;
@@ -66,4 +77,9 @@ void AGameCharacter::SetSelected(bool value)
 void AGameCharacter::AttackTarget(UObject* target)
 {
 
+}
+
+float AGameCharacter::CalculatePower()
+{
+	return basePower;
 }

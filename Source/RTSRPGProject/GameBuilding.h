@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
-		PlayerID owningPlayer;
+		AController* owningPlayer;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
@@ -59,6 +59,7 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
 
+	AController* GetOwningPlayer();
 	void SetSelected(bool value);
 
 private:

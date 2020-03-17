@@ -7,13 +7,16 @@
 #include "GameHUD.h"
 #include "GameCharacter.h"
 #include "GameBuilding.h"
+#include "GamePlayer.h"
+#include "ProjectGameMode.h"
+#include "GameFramework/Controller.h"
 #include "ProjectPlayerController.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class RTSRPGPROJECT_API AProjectPlayerController : public APlayerController
+class RTSRPGPROJECT_API AProjectPlayerController : public APlayerController, public IGamePlayer
 {
 	GENERATED_BODY()
 	
@@ -62,6 +65,8 @@ private:
 	FVector2D boxEnd;
 	TArray<AActor*> unitsFound;
 
+	TArray<AGameCharacter*> army;
+
 public:
 
 	bool AddToSelected(IGameUnit* unit);
@@ -72,10 +77,18 @@ public:
 
 	void UpdateDisplay();
 
-	UFUNCTION()
+	bool AddToArmy(AGameCharacter* unit);
+	bool RemoveFromArmy(AGameCharacter* unit);
+
+	UFUNCTION(BlueprintCallable)
 		bool SpendResources(int cost);
 
-	UPROPERTY()
+	UPROPERTY(EditInstanceOnly)
 		int resources;
+
+	UPROPERTY(EditInstanceOnly)
+		float armyPower;
+
+	void UpdateArmyPower();
 
 };

@@ -3,6 +3,7 @@
 
 #include "GameBuilding.h"
 #include "Engine/World.h"
+#include "ProjectGameMode.h"
 
 // Sets default values
 AGameBuilding::AGameBuilding()
@@ -21,6 +22,9 @@ AGameBuilding::AGameBuilding()
 void AGameBuilding::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
+	owningPlayer = gamemode->GetPlayer(0);
 	
 }
 
@@ -43,6 +47,11 @@ void AGameBuilding::OnClick()
 bool AGameBuilding::GetIsSelected()
 {
 	return selected;
+}
+
+AController* AGameBuilding::GetOwningPlayer()
+{
+	return owningPlayer;
 }
 
 void AGameBuilding::SetSelected(bool value)
