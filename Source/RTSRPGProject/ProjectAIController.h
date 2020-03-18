@@ -17,6 +17,10 @@ class RTSRPGPROJECT_API AProjectAIController : public AAIController, public IGam
 {
 	GENERATED_BODY()
 
+public:
+
+	AProjectAIController();
+
 protected:
 
 	virtual void BeginPlay() override;

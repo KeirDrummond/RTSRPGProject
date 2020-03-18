@@ -6,6 +6,10 @@
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 
+AProjectAIController::AProjectAIController(){
+	bWantsPlayerState = true;
+}
+
 void AProjectAIController::BeginPlay() {
 
 	Super::BeginPlay();
