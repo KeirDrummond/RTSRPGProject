@@ -27,8 +27,8 @@ AProjectGameMode::AProjectGameMode()
 void AProjectGameMode::BeginPlay() {
 	Super::BeginPlay();
 
-	APlayerController* thePlayer = GetWorld()->GetFirstPlayerController();
-	
+	// Sets up players
+	APlayerController* thePlayer = GetWorld()->GetFirstPlayerController();	
 	APawn* AIPawn = GetWorld()->SpawnActor<APawn>(AIPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
 	AProjectAIController* theAI = Cast<AProjectAIController>(AIPawn->GetController());
 
@@ -36,7 +36,9 @@ void AProjectGameMode::BeginPlay() {
 	playerList.Add(theAI);
 }
 
+// Gets the entire player list
 TArray<AController*> AProjectGameMode::GetPlayerList() { return playerList; }
+// Gets a specific player by identifier
 AController* AProjectGameMode::GetPlayer(int value) { 
 	if (value < playerList.Num()) { 
 		return playerList[value];

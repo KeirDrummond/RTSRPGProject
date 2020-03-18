@@ -21,7 +21,6 @@ void AGameCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	playerController = Cast<AProjectPlayerController>(GEngine->GetFirstLocalPlayerController(GetWorld()));
 	theAIController = Cast<AAIController>(GetController());
 
 	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
@@ -30,8 +29,6 @@ void AGameCharacter::BeginPlay()
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
-	
-	power = CalculatePower();
 
 	selected = false;
 }
@@ -72,14 +69,4 @@ AController* AGameCharacter::GetOwningPlayer()
 void AGameCharacter::SetSelected(bool value)
 {
 	selected = value;
-}
-
-void AGameCharacter::AttackTarget(UObject* target)
-{
-
-}
-
-float AGameCharacter::CalculatePower()
-{
-	return basePower;
 }

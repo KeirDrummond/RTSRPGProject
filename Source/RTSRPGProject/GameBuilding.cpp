@@ -9,13 +9,13 @@
 AGameBuilding::AGameBuilding()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+	// Creates a spawn point component in the building. Units will spawn at the spawn point rather than appear randomly around the building.
 	mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = mesh;
 	spawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
 	spawnPoint->AttachToComponent(mesh, FAttachmentTransformRules::KeepRelativeTransform);
-
 }
 
 // Called when the game starts or when spawned
@@ -24,41 +24,21 @@ void AGameBuilding::BeginPlay()
 	Super::BeginPlay();
 
 	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
-	owningPlayer = gamemode->GetPlayer(0);
-	
+	owningPlayer = gamemode->GetPlayer(0);	
 }
 
 // Called every frame
 void AGameBuilding::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
-bool AGameBuilding::AddToQueue(TSoftClassPtr<AGameCharacter> unit) {
+bool AGameBuilding::GetIsSelected() { return selected; }
 
-	return true;
-}
+void AGameBuilding::SetSelected(bool value) { selected = value; }
 
-void AGameBuilding::OnClick()
-{
-}
 
-bool AGameBuilding::GetIsSelected()
-{
-	return selected;
-}
-
-AController* AGameBuilding::GetOwningPlayer()
-{
-	return owningPlayer;
-}
-
-void AGameBuilding::SetSelected(bool value)
-{
-	selected = value;
-}
-
+// Spawns a unit
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
 	FTransform transform = spawnPoint->GetComponentTransform();
 	transform.SetScale3D(FVector(1, 1, 1));

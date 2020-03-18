@@ -30,7 +30,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnDisplay();
 
-	virtual AController* GetOwningPlayer();
+	AController* GetOwningPlayer();
+
 	virtual bool GetIsSelected();
 	virtual void SetSelected(bool value);
 

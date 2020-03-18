@@ -45,9 +45,10 @@ protected:
 	void OnSetDestinationPressed();
 	void OnSetDestinationReleased();
 
+	// When the shift button is pressed/released
 	void OnShiftDown();
 	void OnShiftUp();
-
+	// When the left mouse button is pressed/released
 	void OnClickPressed();
 	void OnClickReleased();
 
@@ -65,30 +66,17 @@ private:
 	FVector2D boxEnd;
 	TArray<AActor*> unitsFound;
 
-	TArray<AGameCharacter*> army;
-
 public:
 
+	// Unit selection
 	bool AddToSelected(IGameUnit* unit);
 	bool RemoveFromSelected(IGameUnit* unit);
 	bool RemoveAllFromSelected();
-
 	void UnitsInBox(TArray<AActor*> units);
-
+	// On selection, display unit data in the UI
 	void UpdateDisplay();
-
-	bool AddToArmy(AGameCharacter* unit);
-	bool RemoveFromArmy(AGameCharacter* unit);
 
 	UFUNCTION(BlueprintCallable)
 		bool SpendResources(int cost);
-
-	UPROPERTY(EditInstanceOnly)
-		int resources;
-
-	UPROPERTY(EditInstanceOnly)
-		float armyPower;
-
-	void UpdateArmyPower();
 
 };

@@ -26,10 +26,18 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Unit owner
+
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		AController* owningPlayer;
+
+	// Identification
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
+
+	// Combat properties
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
 		int health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
@@ -37,29 +45,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int defence;
 
+	// Character creation function
+
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ObjClass"))
 		AGameCharacter* CreateUnit(TSubclassOf<AGameCharacter> unit);
 
-	UFUNCTION(BlueprintCallable)
-		bool AddToQueue(TSoftClassPtr<AGameCharacter> unit);
-
-	float progress;
+	// Components
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class UStaticMeshComponent* mesh;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 		USceneComponent* spawnPoint;
+
+	// Selection data
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();
 
-	void OnClick();
-
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
 
-	AController* GetOwningPlayer();
 	void SetSelected(bool value);
 
 private:

@@ -12,6 +12,7 @@ void AGameHUD::DrawHUD()
 	if (drawBox){ DrawBox(); }
 }
 
+// Draws the selection box and stores units found in an array
 void AGameHUD::DrawBox() {
 	DrawRect(FLinearColor(0, 0, 1, .15f), boxOrigin.X, boxOrigin.Y, boxEnd.X - boxOrigin.X, boxEnd.Y - boxOrigin.Y);
 	unitsFound.Empty();

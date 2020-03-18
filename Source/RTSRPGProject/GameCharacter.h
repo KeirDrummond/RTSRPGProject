@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "GameUnit.h"
+#include "AIController.h"
 #include "GameCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -34,14 +35,22 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	// Determines who owns this unit on game start
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int32 defaultOwner;
+	// The owner of this unit
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		AController* owningPlayer;
+
+	// Identifier
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		FString name;
+
+	// A base power value used to evaluate how good a unit might be
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		float basePower;
+
+	// Combat properties
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
 		int32 health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
@@ -55,29 +64,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		float attackRange;
 
-	UFUNCTION(BlueprintCallable)
-		void AttackTarget(UObject* target);
-
+	// When called in the blueprint, updates the unit colour
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();
 
+	// Uses the character's AI to navigate to a destination
 	void MoveToPosition(FVector target);
 
+
+	// Selection details
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
-
-	AController* GetOwningPlayer();
+	
 	void SetSelected(bool value);
 
-	float power;
+	AController* GetOwningPlayer();
 
 private:
 
 	bool selected;
 
-	class AProjectPlayerController* playerController;
-	class AAIController* theAIController;
-
-	float CalculatePower();
+	AAIController* theAIController;
 
 };

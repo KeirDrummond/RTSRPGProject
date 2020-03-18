@@ -45,14 +45,6 @@ APlayerCamera::APlayerCamera()
 	CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 }
 
-// Called when the game starts or when spawned
-void APlayerCamera::BeginPlay()
-{
-	Super::BeginPlay();
-	
-
-}
-
 // Called every frame
 void APlayerCamera::Tick(float DeltaTime)
 {
@@ -92,13 +84,8 @@ void APlayerCamera::ZoomCamera(float AxisValue) {
 	CameraBoom->TargetArmLength = targetValue;
 }
 
-void APlayerCamera::CameraVertical(float AxisValue) {
-	cameraVValue = AxisValue;
-}
-
-void APlayerCamera::CameraHorizontal(float AxisValue) {
-	cameraHValue = AxisValue;
-}
+void APlayerCamera::CameraVertical(float AxisValue) { cameraVValue = AxisValue; }
+void APlayerCamera::CameraHorizontal(float AxisValue) {	cameraHValue = AxisValue; }
 
 // Called to bind functionality to input
 void APlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
