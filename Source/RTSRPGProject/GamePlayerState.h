@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameUnit.h"
+#include "GameCharacter.h"
 #include "GameFramework/PlayerState.h"
 #include "GamePlayerState.generated.h"
 
@@ -17,10 +18,13 @@ class RTSRPGPROJECT_API AGamePlayerState : public APlayerState
 
 public:
 
-    // All of the data used by a player.
+    // All of the data used by a player
 
     int resources;
 
     TArray<IGameUnit*> units;
+    TArray<AGameCharacter*> army;
+
+    float armyPower;
 
 };
