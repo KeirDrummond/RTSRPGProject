@@ -4,6 +4,7 @@
 #include "ProjectGameMode.h"
 #include "ProjectPlayerController.h"
 #include "ProjectAIController.h"
+#include "GamePlayerState.h"
 #include "GameFramework/HUD.h"
 #include "PlayerCamera.h"
 #include "UObject/ConstructorHelpers.h"
@@ -12,6 +13,7 @@ AProjectGameMode::AProjectGameMode()
 {
 	PlayerControllerClass = AProjectPlayerController::StaticClass();
 	DefaultPawnClass = APlayerCamera::StaticClass();
+	PlayerStateClass = AGamePlayerState::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<AHUD> PlayerHUDBPClass(TEXT("/Game/UserInterface/TheHUD"));
