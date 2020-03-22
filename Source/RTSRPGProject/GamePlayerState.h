@@ -3,8 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameUnit.h"
-#include "GameCharacter.h"
 #include "GameFramework/PlayerState.h"
 #include "GamePlayerState.generated.h"
 
@@ -20,11 +18,11 @@ public:
 
     // All of the data used by a player
 
-    int resources;
+    /*int resources;
 
     TArray<IGameUnit*> units;
     TArray<AGameCharacter*> army;
 
     float armyPower;
-
+    */
 };

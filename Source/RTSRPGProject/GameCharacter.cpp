@@ -23,7 +23,7 @@ void AGameCharacter::BeginPlay()
 	theAIController = Cast<AAIController>(GetController());
 
 	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
-	owningPlayer = gamestate->PlayerArray[defaultOwner]->GetPawn();
+	owningPlayer = gamestate->PlayerArray[defaultOwner];
 
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
@@ -62,7 +62,7 @@ bool AGameCharacter::GetIsSelected()
 	return selected;
 }
 
-APawn* AGameCharacter::GetOwningPlayer()
+APlayerState* AGameCharacter::GetOwningPlayer()
 {
 	return owningPlayer;
 }

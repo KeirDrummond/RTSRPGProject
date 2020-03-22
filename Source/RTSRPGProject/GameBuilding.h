@@ -32,7 +32,7 @@ public:
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int32 defaultOwner;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
-		APawn* owningPlayer;
+		APlayerState* owningPlayer;
 
 	// Identification
 
@@ -70,7 +70,7 @@ public:
 
 	void SetSelected(bool value) override;
 
-	APawn* GetOwningPlayer() override;
+	APlayerState* GetOwningPlayer() override;
 
 private:
 

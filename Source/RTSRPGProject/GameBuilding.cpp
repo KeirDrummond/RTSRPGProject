@@ -26,7 +26,7 @@ AGameBuilding::AGameBuilding()
 void AGameBuilding::BeginPlay()
 {
 	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
-	owningPlayer = gamestate->PlayerArray[defaultOwner]->GetPawn();
+	owningPlayer = gamestate->PlayerArray[defaultOwner];
 
 	Super::BeginPlay();
 }
@@ -41,7 +41,7 @@ bool AGameBuilding::GetIsSelected() { return selected; }
 
 void AGameBuilding::SetSelected(bool value) { selected = value; }
 
-APawn* AGameBuilding::GetOwningPlayer() { return owningPlayer; }
+APlayerState* AGameBuilding::GetOwningPlayer() { return owningPlayer; }
 
 // Spawns a unit
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {

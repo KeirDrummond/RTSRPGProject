@@ -109,10 +109,10 @@ void AProjectPlayerController::OnClickReleased() {
 
 		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
 		if (hitUnit) {
-			APawn* pawn = hitUnit->GetOwningPlayer();
-			if (IsValid(pawn))
+			APlayerState* player = hitUnit->GetOwningPlayer();
+			if (IsValid(player))
 			{
-				if (hitUnit->GetOwningPlayer()->GetController() == this)
+				if (hitUnit->GetOwningPlayer() == PlayerState)
 					AddToSelected(hitUnit);
 			}
 		}
@@ -125,7 +125,7 @@ void AProjectPlayerController::OnClickReleased() {
 			for (AActor* unit : unitsFound) {
 				AGameCharacter* theUnit = Cast<AGameCharacter>(unit);
 				if (theUnit) {
-					if (theUnit->GetOwningPlayer()->GetController() == this)
+					if (theUnit->GetOwningPlayer() == PlayerState)
 						AddToSelected(theUnit);
 				}
 			}

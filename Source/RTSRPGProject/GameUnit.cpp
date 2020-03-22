@@ -5,7 +5,7 @@
 
 // Add default functionality here for any IGameUnit functions that are not pure virtual.
 
-APawn* IGameUnit::GetOwningPlayer()
+APlayerState* IGameUnit::GetOwningPlayer()
 {
 	return nullptr;
 }
