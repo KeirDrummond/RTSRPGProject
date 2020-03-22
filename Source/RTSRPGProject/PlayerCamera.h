@@ -35,6 +35,16 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Camera)
 		float cameraSpeed;
 
+	// Camera controls	
+	float cameraVValue;
+	float cameraHValue;
+
+	void MoveCamera(float posX, float posY);
+
+	void ZoomCamera(float AxisValue);
+	void CameraVertical(float AxisValue);
+	void CameraHorizontal(float AxisValue);
+
 private:
 
 	/** Top down camera */
@@ -45,14 +55,6 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
 
-	// Camera controls	
-	float cameraVValue;
-	float cameraHValue;
 
-	void MoveCamera();
-
-	void ZoomCamera(float AxisValue);
-	void CameraVertical(float AxisValue);
-	void CameraHorizontal(float AxisValue);
 
 };

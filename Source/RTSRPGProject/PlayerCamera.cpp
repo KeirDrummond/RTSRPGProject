@@ -26,7 +26,6 @@ APlayerCamera::APlayerCamera()
 
 	minimumZoom = 500.0f;
 	maximumZoom = 2000.0f;
-
 	cameraSpeed = 2.0f;
 
 	// Create a camera boom...
@@ -49,33 +48,12 @@ APlayerCamera::APlayerCamera()
 void APlayerCamera::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	MoveCamera();
 }
 
-void APlayerCamera::MoveCamera() {
-	APlayerController* pC = Cast<APlayerController>(GetController());
-	float posX;
-	float posY;
-	pC->GetMousePosition(posX, posY);
+void APlayerCamera::MoveCamera(float dirX, float dirY) {
 
-	FVector2D MousePosition(posX, posY);
-	if (pC->GetMousePosition(posX, posY) == true) {
-		float x = 0;
-		float y = 0;
-		int32 a, b;
-		pC->GetViewportSize(a, b);
-		if (posY < 10) { x = 1; }
-		if (posY > (b - 10)) { x = -1; }
-		if (posX < 10) { y = -1; }
-		if (posX > (a - 10)) { y = 1; }
-
-		if (cameraVValue != 0) { x = cameraVValue; }
-		if (cameraHValue != 0) { y = cameraHValue; }
-		
-		FVector movement(x * cameraSpeed, y * cameraSpeed, 0);
-		AddMovementInput(movement, 1);
-	}
+	FVector movement(dirX * cameraSpeed, dirY * cameraSpeed, 0);
+	AddMovementInput(movement, 1);
 }
 
 void APlayerCamera::ZoomCamera(float AxisValue) {
