@@ -66,6 +66,10 @@ private:
 	FVector2D boxEnd;
 	TArray<AActor*> unitsFound;
 
+
+	// Camera
+	void MoveCamera();
+
 public:
 
 	// Unit selection

@@ -24,8 +24,8 @@ void AProjectPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	theHUD = Cast<AGameHUD>(MyHUD);
-
-	InitPlayerState();
+	
+	//Possess();
 }
 
 void AProjectPlayerController::PlayerTick(float DeltaTime)
@@ -107,8 +107,12 @@ void AProjectPlayerController::OnClickReleased() {
 
 		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
 		if (hitUnit) {
-			if (hitUnit->GetOwningPlayer() == this)
-			AddToSelected(hitUnit);
+			APawn* pawn = hitUnit->GetOwningPlayer();
+			if (IsValid(pawn))
+			{
+				if (hitUnit->GetOwningPlayer()->GetController() == this)
+					AddToSelected(hitUnit);
+			}
 		}
 	}
 	else
@@ -119,7 +123,7 @@ void AProjectPlayerController::OnClickReleased() {
 			for (AActor* unit : unitsFound) {
 				AGameCharacter* theUnit = Cast<AGameCharacter>(unit);
 				if (theUnit) {
-					if (theUnit->GetOwningPlayer() == this)
+					if (theUnit->GetOwningPlayer()->GetController() == this)
 						AddToSelected(theUnit);
 				}
 			}
@@ -127,6 +131,26 @@ void AProjectPlayerController::OnClickReleased() {
 	}
 
 	UpdateDisplay();
+}
+
+void AProjectPlayerController::MoveCamera() {/*
+	float x = 0;
+	float y = 0;
+	int32 a, b;
+	GetViewportSize(a, b);
+	if (posY < 10) { x = 1; }
+	if (posY > (b - 10)) { x = -1; }
+	if (posX < 10) { y = -1; }
+	if (posX > (a - 10)) { y = 1; }
+
+	if (cameraVValue != 0) { x = cameraVValue; }
+	if (cameraHValue != 0) { y = cameraHValue; }
+
+	APlayerCamera* pawn = Cast<APlayerCamera>(GetPawn());
+	pawn->MoveCamera();
+
+	FVector movement(x * cameraSpeed, y * cameraSpeed, 0);
+	AddMovementInput(movement, 1);*/
 }
 
 FVector2D AProjectPlayerController::GetCursorPosition() {
