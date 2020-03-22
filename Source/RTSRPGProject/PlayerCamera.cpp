@@ -44,6 +44,11 @@ APlayerCamera::APlayerCamera()
 	CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 }
 
+void APlayerCamera::BeginPlay() {
+	GetWorld()->GetFirstPlayerController()->Possess(this);
+	Super::BeginPlay();	
+}
+
 // Called every frame
 void APlayerCamera::Tick(float DeltaTime)
 {
