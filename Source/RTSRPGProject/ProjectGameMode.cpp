@@ -5,6 +5,7 @@
 #include "ProjectPlayerController.h"
 #include "ProjectAIController.h"
 #include "GamePlayerState.h"
+#include "ProjectGameState.h"
 #include "GameFramework/HUD.h"
 #include "PlayerCamera.h"
 #include "UObject/ConstructorHelpers.h"
@@ -12,8 +13,9 @@
 AProjectGameMode::AProjectGameMode()
 {
 	PlayerControllerClass = AProjectPlayerController::StaticClass();
-	DefaultPawnClass = APlayerCamera::StaticClass();
+	DefaultPawnClass = NULL;
 	PlayerStateClass = AGamePlayerState::StaticClass();
+	GameStateClass = AProjectGameState::StaticClass();
 
 	// set default pawn class to our Blueprinted character
 	static ConstructorHelpers::FClassFinder<AHUD> PlayerHUDBPClass(TEXT("/Game/UserInterface/TheHUD"));
@@ -24,27 +26,16 @@ AProjectGameMode::AProjectGameMode()
 
 	static ConstructorHelpers::FClassFinder<APawn> AIPlayerClass(TEXT("/Game/AI/AIPawn"));
 	AIPlayer = AIPlayerClass.Class;
+	
 }
 
-void AProjectGameMode::BeginPlay() {
-	Super::BeginPlay();
+void AProjectGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
+	Super::InitGame(MapName, Options, ErrorMessage);
 
-	// Sets up players
-	APlayerController* thePlayer = GetWorld()->GetFirstPlayerController();	
+	// Create players
+
+	TSubclassOf<APawn> HumanPlayer = APlayerCamera::StaticClass();
+
+	APawn* playerPawn = GetWorld()->SpawnActor<APawn>(HumanPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
 	APawn* AIPawn = GetWorld()->SpawnActor<APawn>(AIPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
-	AProjectAIController* theAI = Cast<AProjectAIController>(AIPawn->GetController());
-
-	playerList.Add(thePlayer);
-	playerList.Add(theAI);
-}
-
-// Gets the entire player list
-TArray<AController*> AProjectGameMode::GetPlayerList() { return playerList; }
-// Gets a specific player by identifier
-AController* AProjectGameMode::GetPlayer(int value) { 
-	if (value < playerList.Num()) { 
-		return playerList[value];
-	} else {
-		return NULL;
-	}
 }

@@ -18,18 +18,11 @@ class RTSRPGPROJECT_API AProjectGameMode : public AGameModeBase
 public:
 	AProjectGameMode();
 
-	// Tracks players in the game and distributes them on request
-	UFUNCTION(BlueprintPure)
-	TArray<AController*> GetPlayerList();
-	AController* GetPlayer(int value);
-
 protected:
 
-	virtual void BeginPlay() override;
+	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
 	// Reference spawn a new AI player
 	TSubclassOf<APawn> AIPlayer;
-	// The Player list
-	TArray<AController*> playerList;
 
 };
