@@ -30,8 +30,6 @@ void AProjectPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	MoveCamera();
-
 	// keep updating the destination every tick while desired
 	if (bMoveToMouseCursor)
 	{
@@ -62,8 +60,6 @@ void AProjectPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Shift", IE_Pressed, this, &AProjectPlayerController::OnShiftDown);
 	InputComponent->BindAction("Shift", IE_Released, this, &AProjectPlayerController::OnShiftUp);
-
-	InputComponent->BindAxis("Zoom", this, &AProjectPlayerController::ZoomCamera);
 }
 
 void AProjectPlayerController::MoveToMouseCursor()
@@ -135,23 +131,7 @@ void AProjectPlayerController::OnClickReleased() {
 	UpdateDisplay();
 }
 
-void AProjectPlayerController::MoveCamera() {
-	
-	float dirX, dirY = 0;
-
-	float x, y;
-	GetMousePosition(x, y);
-	int32 a, b;
-	GetViewportSize(a, b);
-
-	if (y < 10) { dirX = 1; }
-	if (y > (b - 10)) { dirX = -1; }
-	if (x < 10) { dirY = -1; }
-	if (x > (a - 10)) { dirY = 1; }
-
-	GetPawn<APlayerCamera>()->MoveCamera(dirX, dirY);
-
-	/*
+void AProjectPlayerController::MoveCamera() {/*
 	float x = 0;
 	float y = 0;
 	int32 a, b;
@@ -169,10 +149,6 @@ void AProjectPlayerController::MoveCamera() {
 
 	FVector movement(x * cameraSpeed, y * cameraSpeed, 0);
 	AddMovementInput(movement, 1);*/
-}
-
-void AProjectPlayerController::ZoomCamera(float axisValue) {
-	GetPawn<APlayerCamera>()->ZoomCamera(axisValue);
 }
 
 FVector2D AProjectPlayerController::GetCursorPosition() {

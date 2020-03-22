@@ -69,7 +69,6 @@ private:
 
 	// Camera
 	void MoveCamera();
-	void ZoomCamera(float axisValue);
 
 public:
 

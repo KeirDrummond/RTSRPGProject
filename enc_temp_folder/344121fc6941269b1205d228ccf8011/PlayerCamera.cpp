@@ -49,14 +49,34 @@ void APlayerCamera::BeginPlay() {
 	Super::BeginPlay();	
 }
 
+// Called every frame
+void APlayerCamera::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
 void APlayerCamera::MoveCamera(float dirX, float dirY) {
 
 	FVector movement(dirX * cameraSpeed, dirY * cameraSpeed, 0);
 	AddMovementInput(movement, 1);
 }
 
-void APlayerCamera::ZoomCamera(float axisValue) {
-	float targetValue = CameraBoom->TargetArmLength + axisValue;	
+void APlayerCamera::ZoomCamera(float AxisValue) {
+	float targetValue = CameraBoom->TargetArmLength + AxisValue;	
 	targetValue = FMath::Clamp(targetValue, minimumZoom, maximumZoom);
 	CameraBoom->TargetArmLength = targetValue;
 }
+
+void APlayerCamera::CameraVertical(float AxisValue) { cameraVValue = AxisValue; }
+void APlayerCamera::CameraHorizontal(float AxisValue) {	cameraHValue = AxisValue; }
+
+// Called to bind functionality to input
+void APlayerCamera::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+	InputComponent->BindAxis("Zoom", this, &APlayerCamera::ZoomCamera);
+	InputComponent->BindAxis("CameraVertical", this, &APlayerCamera::CameraVertical);
+	InputComponent->BindAxis("CameraHorizontal", this, &APlayerCamera::CameraHorizontal);
+}
+
