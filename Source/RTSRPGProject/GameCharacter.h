@@ -38,9 +38,9 @@ public:
 	// Determines who owns this unit on game start
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int32 defaultOwner;
-	// The owner of this unit
+	// The pawn of the owned unit
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
-		AController* owningPlayer;
+		APawn* owningPlayer;
 
 	// Identifier
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
@@ -71,14 +71,13 @@ public:
 	// Uses the character's AI to navigate to a destination
 	void MoveToPosition(FVector target);
 
-
 	// Selection details
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
 	
-	void SetSelected(bool value);
+	void SetSelected(bool value) override;
 
-	AController* GetOwningPlayer();
+	APawn* GetOwningPlayer() override;
 
 private:
 

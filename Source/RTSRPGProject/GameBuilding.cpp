@@ -3,6 +3,8 @@
 
 #include "GameBuilding.h"
 #include "Engine/World.h"
+#include "ProjectGameState.h"
+#include "GamePlayerState.h"
 #include "ProjectGameMode.h"
 
 // Sets default values
@@ -16,15 +18,17 @@ AGameBuilding::AGameBuilding()
 	RootComponent = mesh;
 	spawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPoint"));
 	spawnPoint->AttachToComponent(mesh, FAttachmentTransformRules::KeepRelativeTransform);
+
+	defaultOwner = 0;
 }
 
 // Called when the game starts or when spawned
 void AGameBuilding::BeginPlay()
 {
-	Super::BeginPlay();
+	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
+	owningPlayer = gamestate->PlayerArray[defaultOwner]->GetPawn();
 
-	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
-	owningPlayer = gamemode->GetPlayer(0);	
+	Super::BeginPlay();
 }
 
 // Called every frame
@@ -37,6 +41,7 @@ bool AGameBuilding::GetIsSelected() { return selected; }
 
 void AGameBuilding::SetSelected(bool value) { selected = value; }
 
+APawn* AGameBuilding::GetOwningPlayer() { return owningPlayer; }
 
 // Spawns a unit
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {

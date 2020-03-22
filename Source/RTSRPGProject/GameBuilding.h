@@ -28,8 +28,11 @@ public:
 
 	// Unit owner
 
+	// Determines who owns this unit on game start
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
-		AController* owningPlayer;
+		int32 defaultOwner;
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
+		APawn* owningPlayer;
 
 	// Identification
 
@@ -65,7 +68,9 @@ public:
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
 
-	void SetSelected(bool value);
+	void SetSelected(bool value) override;
+
+	APawn* GetOwningPlayer() override;
 
 private:
 

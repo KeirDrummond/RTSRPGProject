@@ -5,6 +5,7 @@
 #include "ProjectPlayerController.h"
 #include "Engine.h"
 #include "AIController.h"
+#include "ProjectGameState.h"
 #include "GameFramework/GameMode.h"
 //#include "GenericPlatform/GenericPlatformMath.h"
 
@@ -19,18 +20,18 @@ AGameCharacter::AGameCharacter()
 // Called when the game starts or when spawned
 void AGameCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-
 	theAIController = Cast<AAIController>(GetController());
 
-	AProjectGameMode* gamemode = Cast<AProjectGameMode>(GetWorld()->GetAuthGameMode());
-	owningPlayer = gamemode->GetPlayer(defaultOwner);
+	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
+	owningPlayer = gamestate->PlayerArray[defaultOwner]->GetPawn();
 
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
 
 	selected = false;
+
+	Super::BeginPlay();
 }
 
 // Called every frame
@@ -61,7 +62,7 @@ bool AGameCharacter::GetIsSelected()
 	return selected;
 }
 
-AController* AGameCharacter::GetOwningPlayer()
+APawn* AGameCharacter::GetOwningPlayer()
 {
 	return owningPlayer;
 }
