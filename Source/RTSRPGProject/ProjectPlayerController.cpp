@@ -136,7 +136,6 @@ void AProjectPlayerController::OnClickReleased() {
 }
 
 void AProjectPlayerController::MoveCamera() {
-	
 	float dirX, dirY = 0;
 
 	float x, y;
@@ -150,25 +149,6 @@ void AProjectPlayerController::MoveCamera() {
 	if (x > (a - 10)) { dirY = 1; }
 
 	GetPawn<APlayerCamera>()->MoveCamera(dirX, dirY);
-
-	/*
-	float x = 0;
-	float y = 0;
-	int32 a, b;
-	GetViewportSize(a, b);
-	if (posY < 10) { x = 1; }
-	if (posY > (b - 10)) { x = -1; }
-	if (posX < 10) { y = -1; }
-	if (posX > (a - 10)) { y = 1; }
-
-	if (cameraVValue != 0) { x = cameraVValue; }
-	if (cameraHValue != 0) { y = cameraHValue; }
-
-	APlayerCamera* pawn = Cast<APlayerCamera>(GetPawn());
-	pawn->MoveCamera();
-
-	FVector movement(x * cameraSpeed, y * cameraSpeed, 0);
-	AddMovementInput(movement, 1);*/
 }
 
 void AProjectPlayerController::ZoomCamera(float axisValue) {
