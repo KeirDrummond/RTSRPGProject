@@ -24,8 +24,6 @@ void AProjectPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	theHUD = Cast<AGameHUD>(MyHUD);
-	
-	//Possess();
 }
 
 void AProjectPlayerController::PlayerTick(float DeltaTime)
