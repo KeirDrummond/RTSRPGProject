@@ -26,7 +26,7 @@ APlayerCamera::APlayerCamera()
 
 	minimumZoom = 500.0f;
 	maximumZoom = 2000.0f;
-	cameraSpeed = 2.0f;
+	cameraSpeed = 4.0f;
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
