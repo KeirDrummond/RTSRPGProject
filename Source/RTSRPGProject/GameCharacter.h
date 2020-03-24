@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "GameUnit.h"
 #include "AIController.h"
+#include "GamePlayerState.h"
 #include "GameCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -41,6 +42,7 @@ public:
 	// The pawn of the owned unit
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		APlayerState* owningPlayer;
+	void SetOwningPlayer(APlayerState* player);
 
 	// Identifier
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)

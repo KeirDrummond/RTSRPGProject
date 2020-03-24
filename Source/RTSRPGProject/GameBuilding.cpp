@@ -26,7 +26,11 @@ AGameBuilding::AGameBuilding()
 void AGameBuilding::BeginPlay()
 {
 	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
+	if (defaultOwner >= gamestate->PlayerArray.Num()) { defaultOwner = 0; }
 	owningPlayer = gamestate->PlayerArray[defaultOwner];
+
+	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
+	op->AddToUnits(this);
 
 	Super::BeginPlay();
 }
@@ -35,6 +39,11 @@ void AGameBuilding::BeginPlay()
 void AGameBuilding::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AGameBuilding::SetOwningPlayer(APlayerState* player)
+{
+	owningPlayer = player;
 }
 
 bool AGameBuilding::GetIsSelected() { return selected; }
@@ -49,5 +58,7 @@ AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
 	transform.SetScale3D(FVector(1, 1, 1));
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	return GetWorld()->SpawnActor<AGameCharacter>(unit, transform, params);
+	AGameCharacter* newUnit = GetWorld()->SpawnActor<AGameCharacter>(unit, transform, params);
+	newUnit->SetOwningPlayer(owningPlayer);
+	return newUnit;
 }

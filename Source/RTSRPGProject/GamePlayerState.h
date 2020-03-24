@@ -23,6 +23,13 @@ public:
     TArray<IGameUnit*> units;
     TArray<AGameCharacter*> army;
 
-    float armyPower;
-    */
+    float armyPower;*/
+
+    UPROPERTY(BlueprintReadOnly)
+        TArray<AActor*> units;
+    UPROPERTY(BlueprintReadOnly)
+        TArray<AActor*> army;
+
+    void AddToUnits(AActor* unit);
+
 };

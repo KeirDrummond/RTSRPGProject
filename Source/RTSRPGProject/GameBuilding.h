@@ -33,6 +33,7 @@ public:
 		int32 defaultOwner;
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		APlayerState* owningPlayer;
+	void SetOwningPlayer(APlayerState* player);
 
 	// Identification
 

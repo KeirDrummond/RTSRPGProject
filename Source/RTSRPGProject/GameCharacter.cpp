@@ -26,6 +26,9 @@ void AGameCharacter::BeginPlay()
 	if (defaultOwner >= gamestate->PlayerArray.Num()) { defaultOwner = 0; }
 	owningPlayer = gamestate->PlayerArray[defaultOwner];
 
+	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
+	op->AddToUnits(this);
+
 	if (maxHealth != NULL) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
@@ -47,6 +50,11 @@ void AGameCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+void AGameCharacter::SetOwningPlayer(APlayerState* player)
+{
+	owningPlayer = player;
 }
 
 void AGameCharacter::MoveToPosition(const FVector target) {
