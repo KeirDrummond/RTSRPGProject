@@ -23,6 +23,7 @@ void AGameCharacter::BeginPlay()
 	theAIController = Cast<AAIController>(GetController());
 
 	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
+	if (defaultOwner >= gamestate->PlayerArray.Num()) { defaultOwner = 0; }
 	owningPlayer = gamestate->PlayerArray[defaultOwner];
 
 	if (maxHealth != NULL) { maxHealth = 1; }

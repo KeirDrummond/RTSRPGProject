@@ -20,7 +20,8 @@ public:
 
 protected:
 
-	void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	//void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	void StartPlay() override;
 
 	// Reference spawn a new AI player
 	TSubclassOf<APawn> AIPlayer;

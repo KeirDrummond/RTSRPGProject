@@ -29,14 +29,24 @@ AProjectGameMode::AProjectGameMode()
 	
 }
 
-void AProjectGameMode::StartPlay() {
+/*void AProjectGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) {
+	Super::InitGame(MapName, Options, ErrorMessage);
+
 	// Create players
 
 	TSubclassOf<APawn> HumanPlayer = APlayerCamera::StaticClass();
 
 	APawn* playerPawn = GetWorld()->SpawnActor<APawn>(HumanPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
 	APawn* AIPawn = GetWorld()->SpawnActor<APawn>(AIPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
+}*/
 
-	// Run Begin Play for all other actors
+void AProjectGameMode::StartPlay() {
 	Super::StartPlay();
+
+	// Create players
+
+	TSubclassOf<APawn> HumanPlayer = APlayerCamera::StaticClass();
+
+	APawn* playerPawn = GetWorld()->SpawnActor<APawn>(HumanPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
+	APawn* AIPawn = GetWorld()->SpawnActor<APawn>(AIPlayer, FVector(0.f, 0.f, 0.f), FRotator::ZeroRotator);
 }
