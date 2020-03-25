@@ -16,6 +16,14 @@ enum class PlayerID : uint8
 	Player2 UMETA(DisplayName = "Player 2")
 };
 
+UENUM(BlueprintType)
+enum class ECommandsEnum : uint8
+{
+	CE_Idle UMETA(DisplayName="Idle"),
+	CE_Movement UMETA(DisplayName="Movement"),
+	CE_Attack UMETA(DisplayName="Attack")
+};
+
 UCLASS(Blueprintable)
 class RTSRPGPROJECT_API AGameCharacter : public ACharacter, public IGameUnit
 {
@@ -32,9 +40,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	// Determines who owns this unit on game start
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
@@ -61,6 +66,8 @@ public:
 		int32 attack;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int32 defence;
+
+	// How many attacks can be performed per second.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
 		int32 attackSpeed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
@@ -76,15 +83,34 @@ public:
 	// Selection details
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
-	
+
 	void SetSelected(bool value) override;
 
 	APlayerState* GetOwningPlayer() override;
+
+	// Commands
+	void Idle();
+	void MoveCommand(const FVector destination);
+	bool AttackCommand(AActor* target);
+
+	void TakeDamage(int32 damage);
 
 private:
 
 	bool selected;
 
 	AAIController* theAIController;
+
+	ECommandsEnum currentCommand;
+
+	// Called on frame updates to check if a new command needs to be done.
+	void DoCommand();
+
+	void AttackTarget(AActor* target);
+
+	float attackCooldown;
+
+	FVector currentDestination;
+	AActor* currentTarget;
 
 };

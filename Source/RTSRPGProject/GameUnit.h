@@ -36,4 +36,6 @@ public:
 	virtual bool GetIsSelected();
 	virtual void SetSelected(bool value);
 
+	virtual void TakeDamage(int32 damage);
+
 };

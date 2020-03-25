@@ -70,15 +70,6 @@ void AProjectPlayerController::MoveToMouseCursor()
 {
 	//Movement command functionality
 
-	/*
-	if (ARTSRPGProjectCharacter* MyPawn = Cast<ARTSRPGProjectCharacter>(GetPawn()))
-	{
-		if (MyPawn->GetCursorToWorld())
-		{
-			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
-		}
-	}*/
-
 	// Trace to see what is under the mouse cursor
 	FHitResult Hit;
 	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
@@ -169,7 +160,7 @@ void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 	for (int32 i = 0; i <= unitArray.Num() - 1; i++)
 	{
 		AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
-		if (IsValid(unit)) { unit->MoveToPosition(DestLocation); }
+		if (IsValid(unit)) { unit->MoveCommand(DestLocation); }
 	}
 
 }

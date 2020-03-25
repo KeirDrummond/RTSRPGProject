@@ -73,6 +73,8 @@ public:
 
 	APlayerState* GetOwningPlayer() override;
 
+	void TakeDamage(int32 damage);
+
 private:
 
 	bool selected;

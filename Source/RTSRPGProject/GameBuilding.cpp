@@ -52,6 +52,10 @@ void AGameBuilding::SetSelected(bool value) { selected = value; }
 
 APlayerState* AGameBuilding::GetOwningPlayer() { return owningPlayer; }
 
+void AGameBuilding::TakeDamage(int32 damage)
+{
+}
+
 // Spawns a unit
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
 	FTransform transform = spawnPoint->GetComponentTransform();

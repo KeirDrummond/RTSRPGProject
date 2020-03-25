@@ -20,3 +20,7 @@ void IGameUnit::SetSelected(bool value)
 
 }
 
+void IGameUnit::TakeDamage(int32 damage)
+{
+
+}
