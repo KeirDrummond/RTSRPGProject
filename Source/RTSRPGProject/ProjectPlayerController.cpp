@@ -74,7 +74,24 @@ void AProjectPlayerController::MoveToMouseCursor()
 	FHitResult Hit;
 	GetHitResultUnderCursor(ECC_Visibility, false, Hit);
 
-	if (Hit.bBlockingHit)
+	bool isTarget = false;
+	if (Hit.GetActor())
+	{
+		if (Hit.GetActor()->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
+		{
+			IGameUnit* unit = Cast<IGameUnit>(Hit.GetActor());
+			if (unit->GetOwningPlayer() != PlayerState)
+			{
+				isTarget = true;
+			}
+		}
+	}
+
+	if (isTarget)
+	{
+		SetNewAttackTarget(Hit.GetActor());
+	}
+	else if (Hit.bBlockingHit)
 	{
 		// We hit something, move there
 		SetNewMoveDestination(Hit.ImpactPoint);
@@ -162,7 +179,16 @@ void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 		AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
 		if (IsValid(unit)) { unit->MoveCommand(DestLocation); }
 	}
+}
 
+void AProjectPlayerController::SetNewAttackTarget(AActor* target)
+{
+	if (unitArray.Num() != 0)
+		for (int32 i = 0; i <= unitArray.Num() - 1; i++)
+		{
+			AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
+			if (IsValid(unit)) { unit->AttackCommand(target); }
+		}
 }
 
 void AProjectPlayerController::OnSetDestinationPressed()
