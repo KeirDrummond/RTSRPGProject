@@ -18,13 +18,6 @@ public:
 
     // All of the data used by a player
 
-    /*int resources;
-
-    TArray<IGameUnit*> units;
-    TArray<AGameCharacter*> army;
-
-    float armyPower;*/
-
     UPROPERTY(BlueprintReadOnly)
         TArray<AActor*> units;
     UPROPERTY(BlueprintReadOnly)
