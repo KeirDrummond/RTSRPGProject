@@ -58,13 +58,13 @@ public:
 		float basePower;
 
 	// Combat properties
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
+	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int32 health;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int32 maxHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int32 attack;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int32 defence;
 
 	// How many attacks can be performed per second.
@@ -112,5 +112,10 @@ private:
 
 	FVector currentDestination;
 	AActor* currentTarget;
+
+protected:
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void UpdateAnimation(ECommandsEnum command);
 
 };

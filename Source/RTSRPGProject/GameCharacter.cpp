@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "AIController.h"
 #include "ProjectGameState.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/GameMode.h"
 //#include "GenericPlatform/GenericPlatformMath.h"
 
@@ -30,7 +31,7 @@ void AGameCharacter::BeginPlay()
 	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
 	op->AddToUnits(this);
 
-	if (maxHealth != NULL) { maxHealth = 1; }
+	if (maxHealth <= 0) { maxHealth = 1; }
 	if (maxHealth < 1) { maxHealth = 1; }
 	health = maxHealth;
 
@@ -91,12 +92,14 @@ void AGameCharacter::DoCommand()
 
 void AGameCharacter::Idle() {
 	currentCommand = ECommandsEnum::CE_Idle;
+	UpdateAnimation(ECommandsEnum::CE_Idle);
 	theAIController->StopMovement();
 }
 
 void AGameCharacter::MoveCommand(const FVector destination)
 {
 	currentCommand = ECommandsEnum::CE_Movement;
+	UpdateAnimation(ECommandsEnum::CE_Movement);
 	currentDestination = destination;
 	MoveToPosition(destination);
 }
@@ -108,17 +111,27 @@ bool AGameCharacter::AttackCommand(AActor* target)
 		return false;
 	}
 
+	currentTarget = target;
+	currentCommand = ECommandsEnum::CE_Attack;
+
 	FVector myPos = this->GetActorLocation();
 	FVector targetPos = target->GetActorLocation();
 	
-	if (FVector::Distance(myPos, targetPos) < attackRange)
+	float distance = FVector::Distance(myPos, targetPos);
+
+	if (distance < attackRange)
 	{
 		theAIController->StopMovement();
 		AttackTarget(target);
+		UpdateAnimation(ECommandsEnum::CE_Attack);
+		const FRotator rotation = UKismetMathLibrary::FindLookAtRotation(myPos, targetPos);
+		SetActorRotation(rotation);
 	}
 	else
 	{
-		MoveToPosition(targetPos);
+		UpdateAnimation(ECommandsEnum::CE_Movement);
+		theAIController->MoveToLocation(targetPos);
+		currentDestination = targetPos;
 	}
 
 	return true;
@@ -126,6 +139,7 @@ bool AGameCharacter::AttackCommand(AActor* target)
 
 void AGameCharacter::AttackTarget(AActor* target)
 {
+	UpdateAnimation(currentCommand);
 	if (attackCooldown <= 0)
 	{
 		if (target->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
