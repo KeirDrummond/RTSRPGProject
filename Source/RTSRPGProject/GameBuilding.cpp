@@ -41,6 +41,11 @@ void AGameBuilding::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
+bool AGameBuilding::IsInteractable()
+{
+	return interactable;
+}
+
 void AGameBuilding::SetOwningPlayer(APlayerState* player)
 {
 	owningPlayer = player;

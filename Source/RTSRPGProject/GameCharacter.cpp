@@ -6,9 +6,9 @@
 #include "Engine.h"
 #include "AIController.h"
 #include "ProjectGameState.h"
+#include "GenericPlatform/GenericPlatformMath.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/GameMode.h"
-//#include "GenericPlatform/GenericPlatformMath.h"
 
 // Sets default values
 AGameCharacter::AGameCharacter()
@@ -16,6 +16,7 @@ AGameCharacter::AGameCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	defaultOwner = 0;
+	interactable = true;
 	currentCommand = ECommandsEnum::CE_Idle;
 }
 
@@ -44,6 +45,7 @@ void AGameCharacter::BeginPlay()
 void AGameCharacter::Tick(float DeltaTime)
 {
 	DoCommand();
+	attackCooldown = FGenericPlatformMath::Max(attackCooldown - DeltaTime, 0.f);
 	Super::Tick(DeltaTime);
 }
 
@@ -59,6 +61,11 @@ void AGameCharacter::MoveToPosition(const FVector target) {
 bool AGameCharacter::GetIsSelected()
 {
 	return selected;
+}
+
+bool AGameCharacter::IsInteractable()
+{
+	return interactable;
 }
 
 APlayerState* AGameCharacter::GetOwningPlayer()
@@ -111,6 +118,16 @@ bool AGameCharacter::AttackCommand(AActor* target)
 		return false;
 	}
 
+	if (target->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
+	{
+		IGameUnit* unit = Cast<IGameUnit>(target);
+		if (!unit->IsInteractable())
+		{
+			Idle();
+			return false;
+		}
+	}
+
 	currentTarget = target;
 	currentCommand = ECommandsEnum::CE_Attack;
 
@@ -146,6 +163,7 @@ void AGameCharacter::AttackTarget(AActor* target)
 		{
 			IGameUnit* unit = Cast<IGameUnit>(target);
 			unit->TakeDamage(attack);
+			attackCooldown = 1;
 		}
 	}
 }
@@ -153,4 +171,5 @@ void AGameCharacter::AttackTarget(AActor* target)
 void AGameCharacter::TakeDamage(int32 damage)
 {
 	health = health - damage;
+	UpdateHealth();
 }

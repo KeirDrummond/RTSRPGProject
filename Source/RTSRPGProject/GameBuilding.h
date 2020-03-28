@@ -75,8 +75,12 @@ public:
 
 	void TakeDamage(int32 damage);
 
+	bool IsInteractable() override;
+
 private:
 
 	bool selected;
+
+	bool interactable;
 
 };

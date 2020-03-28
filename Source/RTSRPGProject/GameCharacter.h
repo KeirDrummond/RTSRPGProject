@@ -95,6 +95,8 @@ public:
 
 	void TakeDamage(int32 damage);
 
+	bool IsInteractable() override;
+
 private:
 
 	bool selected;
@@ -111,11 +113,16 @@ private:
 	float attackCooldown;
 
 	FVector currentDestination;
-	AActor* currentTarget;
+	AActor* currentTarget;	
+
+	bool interactable;
 
 protected:
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void UpdateAnimation(ECommandsEnum command);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateHealth();
 
 };
