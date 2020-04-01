@@ -16,7 +16,7 @@ AGameCharacter::AGameCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	defaultOwner = 0;
-	interactable = true;
+	alive = true;
 	currentCommand = ECommandsEnum::CE_Idle;
 }
 
@@ -55,7 +55,15 @@ void AGameCharacter::SetOwningPlayer(APlayerState* player)
 }
 
 void AGameCharacter::MoveToPosition(const FVector target) {
-	theAIController->MoveToLocation(target);
+	theAIController->MoveToLocation(
+		target,
+		100.f,
+		true,
+		true,
+		false,
+		true,
+		0,
+		true);
 }
 
 bool AGameCharacter::GetIsSelected()
@@ -63,9 +71,9 @@ bool AGameCharacter::GetIsSelected()
 	return selected;
 }
 
-bool AGameCharacter::IsInteractable()
+bool AGameCharacter::IsAlive()
 {
-	return interactable;
+	return alive;
 }
 
 APlayerState* AGameCharacter::GetOwningPlayer()
@@ -121,7 +129,7 @@ bool AGameCharacter::AttackCommand(AActor* target)
 	if (target->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
 	{
 		IGameUnit* unit = Cast<IGameUnit>(target);
-		if (!unit->IsInteractable())
+		if (!unit->IsAlive())
 		{
 			Idle();
 			return false;
@@ -172,4 +180,17 @@ void AGameCharacter::TakeDamage(int32 damage)
 {
 	health = health - damage;
 	UpdateHealth();
+	if (health <= 0)
+	{
+		OnDeath();
+	}
+}
+
+void AGameCharacter::OnDeath()
+{
+	alive = false;
+	currentCommand = ECommandsEnum::CE_Dead;
+	UpdateAnimation(ECommandsEnum::CE_Dead);
+	SetLifeSpan(5.f);
+	GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");
 }

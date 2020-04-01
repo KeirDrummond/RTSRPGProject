@@ -25,7 +25,7 @@ void IGameUnit::TakeDamage(int32 damage)
 
 }
 
-bool IGameUnit::IsInteractable()
+bool IGameUnit::IsAlive()
 {
 	return false;
 }

@@ -38,6 +38,6 @@ public:
 
 	virtual void TakeDamage(int32 damage);
 
-	virtual bool IsInteractable();
+	virtual bool IsAlive();
 
 };

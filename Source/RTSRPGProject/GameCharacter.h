@@ -19,9 +19,10 @@ enum class PlayerID : uint8
 UENUM(BlueprintType)
 enum class ECommandsEnum : uint8
 {
-	CE_Idle UMETA(DisplayName="Idle"),
-	CE_Movement UMETA(DisplayName="Movement"),
-	CE_Attack UMETA(DisplayName="Attack")
+	CE_Idle UMETA(DisplayName = "Idle"),
+	CE_Movement UMETA(DisplayName = "Movement"),
+	CE_Attack UMETA(DisplayName = "Attack"),
+	CE_Dead UMETA(DisplayName = "Dead")
 };
 
 UCLASS(Blueprintable)
@@ -95,7 +96,10 @@ public:
 
 	void TakeDamage(int32 damage);
 
-	bool IsInteractable() override;
+	bool IsAlive() override;
+
+	UPROPERTY(BlueprintReadOnly)
+	bool alive;
 
 private:
 
@@ -114,8 +118,8 @@ private:
 
 	FVector currentDestination;
 	AActor* currentTarget;	
-
-	bool interactable;
+		
+	void OnDeath();
 
 protected:
 

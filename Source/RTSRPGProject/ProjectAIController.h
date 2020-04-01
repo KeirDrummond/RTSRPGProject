@@ -13,7 +13,7 @@
  * 
  */
 UCLASS()
-class RTSRPGPROJECT_API AProjectAIController : public AAIController, public IGamePlayer
+class RTSRPGPROJECT_API AProjectAIController : public AAIController
 {
 	GENERATED_BODY()
 

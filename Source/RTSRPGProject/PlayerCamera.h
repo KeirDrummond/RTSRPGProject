@@ -31,6 +31,10 @@ public:
 		float maximumZoom;
 	UPROPERTY(EditDefaultsOnly, Category = Camera)
 		float cameraSpeed;
+	UPROPERTY(EditDefaultsOnly, Category = Camera)
+		float xBound;
+	UPROPERTY(EditDefaultsOnly, Category = Camera)
+		float yBound;
 
 	// Camera controls	
 

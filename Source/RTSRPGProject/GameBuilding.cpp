@@ -20,6 +20,7 @@ AGameBuilding::AGameBuilding()
 	spawnPoint->AttachToComponent(mesh, FAttachmentTransformRules::KeepRelativeTransform);
 
 	defaultOwner = 0;
+	alive = true;
 }
 
 // Called when the game starts or when spawned
@@ -41,9 +42,9 @@ void AGameBuilding::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-bool AGameBuilding::IsInteractable()
+bool AGameBuilding::IsAlive()
 {
-	return interactable;
+	return alive;
 }
 
 void AGameBuilding::SetOwningPlayer(APlayerState* player)
