@@ -59,7 +59,7 @@ public:
 		float basePower;
 
 	// Combat properties
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = Unit)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int32 health;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int32 maxHealth;
@@ -122,6 +122,9 @@ private:
 	void OnDeath();
 
 protected:
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDeathBP();
 
 	UFUNCTION(BlueprintImplementableEvent)
 		void UpdateAnimation(ECommandsEnum command);

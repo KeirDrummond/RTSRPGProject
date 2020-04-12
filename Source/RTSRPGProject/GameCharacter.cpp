@@ -178,7 +178,7 @@ void AGameCharacter::AttackTarget(AActor* target)
 
 void AGameCharacter::TakeDamage(int32 damage)
 {
-	health = health - damage;
+	health -= damage;
 	UpdateHealth();
 	if (health <= 0)
 	{
@@ -193,4 +193,6 @@ void AGameCharacter::OnDeath()
 	UpdateAnimation(ECommandsEnum::CE_Dead);
 	SetLifeSpan(5.f);
 	GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");
+
+	OnDeathBP();
 }
