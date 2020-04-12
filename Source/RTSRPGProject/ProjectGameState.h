@@ -16,6 +16,11 @@ class RTSRPGPROJECT_API AProjectGameState : public AGameStateBase
 	
 public:
 
+	UFUNCTION(BlueprintCallable)
+	void PlayerDefeated(APlayerState* player);
+
 protected:
+
+	void BeginPlay() override;
 
 };
