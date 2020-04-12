@@ -18,12 +18,24 @@ class RTSRPGPROJECT_API AProjectGameMode : public AGameModeBase
 public:
 	AProjectGameMode();
 
-protected:
-
-	//void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	void StartPlay() override;
 
+	void Tick(float DeltaSeconds) override;
+
+protected:
+
+	float resourceTimer;
+
+	// Reference spawn a new Human player
+	TSubclassOf<APawn> HumanPlayer;
 	// Reference spawn a new AI player
 	TSubclassOf<APawn> AIPlayer;
+
+public:
+
+	UFUNCTION(BlueprintNativeEvent)
+	void EndGame();
+
+	virtual void EndGame_Implementation();
 
 };
