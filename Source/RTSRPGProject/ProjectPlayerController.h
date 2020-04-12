@@ -83,6 +83,8 @@ public:
 	void UpdateDisplay();
 
 	UFUNCTION(BlueprintCallable)
-		bool SpendResources(int cost);
+		void PauseGame();
+	UFUNCTION(BlueprintCallable)
+		void UnpauseGame();
 
 };

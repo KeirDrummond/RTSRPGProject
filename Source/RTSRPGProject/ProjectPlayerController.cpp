@@ -283,9 +283,10 @@ void AProjectPlayerController::UpdateDisplay()
 
 }
 
-bool AProjectPlayerController::SpendResources(int cost) {
-	if (1 < cost) { return false; }
-	//resources = resources - cost;
-	
-	return true;
+void AProjectPlayerController::PauseGame() {
+	SetPause(true);
+}
+
+void AProjectPlayerController::UnpauseGame() {
+	SetPause(false);
 }
