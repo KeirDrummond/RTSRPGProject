@@ -4,6 +4,12 @@
 #include "GamePlayerState.h"
 #include "GameCharacter.h"
 
+AGamePlayerState::AGamePlayerState()
+{
+	resources = 0;
+	resourceTimer = 5.f;
+}
+
 void AGamePlayerState::AddToUnits(AActor* unit)
 {
 	units.Add(unit);
@@ -12,4 +18,11 @@ void AGamePlayerState::AddToUnits(AActor* unit)
 	{
 		army.Add(armyUnit);
 	}
+}
+
+bool AGamePlayerState::SpendResources(int cost) {
+	if (resources < cost) { return false; }
+	resources = resources - cost;
+
+	return true;
 }

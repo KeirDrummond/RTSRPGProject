@@ -16,6 +16,8 @@ class RTSRPGPROJECT_API AGamePlayerState : public APlayerState
 
 public:
 
+    AGamePlayerState();
+
     // All of the data used by a player
 
     UPROPERTY(BlueprintReadOnly)
@@ -23,6 +25,14 @@ public:
     UPROPERTY(BlueprintReadOnly)
         TArray<AActor*> army;
 
+    float resourceTimer;
+    bool SpendResources(int value);
+
+    UPROPERTY(BlueprintReadOnly)
+        int resources;
+
     void AddToUnits(AActor* unit);
+
+    bool alive;
 
 };
