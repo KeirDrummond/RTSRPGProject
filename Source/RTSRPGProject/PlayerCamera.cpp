@@ -26,7 +26,7 @@ APlayerCamera::APlayerCamera()
 
 	minimumZoom = 500.0f;
 	maximumZoom = 2000.0f;
-	cameraSpeed = 4.0f;
+	cameraSpeed = 6.0f;
 	xBound = 0.0f;
 	yBound = 0.0f;
 
@@ -48,7 +48,7 @@ APlayerCamera::APlayerCamera()
 
 void APlayerCamera::BeginPlay() {
 	GetWorld()->GetFirstPlayerController()->Possess(this);
-	Super::BeginPlay();	
+	Super::BeginPlay();
 }
 
 void APlayerCamera::MoveCamera(float dirX, float dirY) {

@@ -41,7 +41,7 @@ public:
 	void MoveCamera(float posX, float posY);
 	void ZoomCamera(float axisValue);
 
-private:
+protected:
 
 	/** Top down camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
