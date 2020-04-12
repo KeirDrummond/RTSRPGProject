@@ -42,14 +42,17 @@ public:
 
 	// Combat properties
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Unit)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = Unit)
 		int health;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int maxHealth;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Unit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Unit)
 		int defence;
 
 	// Character creation function
+
+	UFUNCTION(BlueprintCallable)
+		bool BuyUnit(TSubclassOf<AGameCharacter> unit, int cost);
 
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ObjClass"))
 		AGameCharacter* CreateUnit(TSubclassOf<AGameCharacter> unit);
@@ -82,5 +85,15 @@ private:
 	bool selected;
 
 	bool alive;
+
+	void OnDeath();
+
+protected:
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void OnDeathBP();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void UpdateHealth();
 
 };

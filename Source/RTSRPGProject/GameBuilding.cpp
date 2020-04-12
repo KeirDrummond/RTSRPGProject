@@ -33,6 +33,9 @@ void AGameBuilding::BeginPlay()
 	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
 	op->AddToUnits(this);
 
+	selected = false;
+	health = maxHealth;
+
 	Super::BeginPlay();
 }
 
@@ -45,6 +48,14 @@ void AGameBuilding::Tick(float DeltaTime)
 bool AGameBuilding::IsAlive()
 {
 	return alive;
+}
+
+void AGameBuilding::OnDeath()
+{
+	alive = false;
+	SetLifeSpan(5.f);
+
+	OnDeathBP();
 }
 
 void AGameBuilding::SetOwningPlayer(APlayerState* player)
@@ -60,6 +71,23 @@ APlayerState* AGameBuilding::GetOwningPlayer() { return owningPlayer; }
 
 void AGameBuilding::TakeDamage(int32 damage)
 {
+	health -= damage;
+	UpdateHealth();
+	if (health <= 0)
+	{
+		OnDeath();
+	}
+}
+
+bool AGameBuilding::BuyUnit(TSubclassOf<AGameCharacter> unit, int cost)
+{
+	AGamePlayerState *ps = Cast<AGamePlayerState>(GetOwningPlayer());
+	if (ps->SpendResources(cost))
+	{		
+		CreateUnit(unit);
+		return true;
+	}
+	return false;
 }
 
 // Spawns a unit
