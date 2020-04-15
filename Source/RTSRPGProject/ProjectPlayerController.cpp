@@ -6,7 +6,6 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
-#include "RTSRPGProjectCharacter.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "GameHUD.h"
@@ -51,8 +50,6 @@ void AProjectPlayerController::SetupInputComponent()
 {
 	// set up gameplay key bindings
 	Super::SetupInputComponent();
-
-	//APlayerCamera* playerCamera = Cast<APlayerCamera>(GetPawn());
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &AProjectPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &AProjectPlayerController::OnSetDestinationReleased);
