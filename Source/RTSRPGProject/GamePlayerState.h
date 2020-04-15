@@ -35,4 +35,9 @@ public:
 
     bool alive;
 
+    UPROPERTY(BlueprintReadOnly)
+        float ArmyPower;
+
+    void CalculateArmyPower();
+
 };

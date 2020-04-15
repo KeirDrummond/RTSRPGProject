@@ -3,6 +3,7 @@
 
 #include "GamePlayerState.h"
 #include "GameCharacter.h"
+#include "ProjectAIController.h"
 
 AGamePlayerState::AGamePlayerState()
 {
@@ -18,6 +19,20 @@ void AGamePlayerState::AddToUnits(AActor* unit)
 	{
 		army.Add(armyUnit);
 	}
+}
+
+void AGamePlayerState::CalculateArmyPower()
+{
+	float power = 0;
+	for (int i = 0; i < army.Num(); i++)
+	{
+		AGameCharacter *character = Cast<AGameCharacter>(army[i]);
+		if (character)
+		{
+			power += character->basePower;
+		}
+	}
+	ArmyPower = power;
 }
 
 bool AGamePlayerState::SpendResources(int cost) {

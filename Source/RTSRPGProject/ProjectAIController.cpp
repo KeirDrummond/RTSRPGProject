@@ -4,13 +4,47 @@
 #include "ProjectAIController.h"
 #include "ProjectGameMode.h"
 #include "Engine/World.h"
-#include "Engine/Engine.h"
 
 AProjectAIController::AProjectAIController(){
 	bWantsPlayerState = true;
 }
 
-void AProjectAIController::BeginPlay() {
+void AProjectAIController::LostUnit(AGameCharacter* unit)
+{
+	if (DefendingSquad.Find(unit))
+	{
+		DefendingSquad.Remove(unit);
+	}
+	else if (AttackingSquad.Find(unit))
+	{
+		AttackingSquad.Remove(unit);
+	}
+}
 
-	Super::BeginPlay();
+void AProjectAIController::CommandMoveSquadToLocation(TArray<AGameCharacter*> squad, FVector location)
+{
+	for (AGameCharacter* unit : squad)
+	{
+		unit->MoveCommand(location);
+	}
+}
+
+void AProjectAIController::MoveToDefendingSquad(AGameCharacter* unit)
+{
+	if (AttackingSquad.Find(unit))
+	{
+		AttackingSquad.Remove(unit);
+	}
+
+	DefendingSquad.Add(unit);
+}
+
+void AProjectAIController::MoveToAttackingSquad(AGameCharacter* unit)
+{
+	if (DefendingSquad.Find(unit))
+	{
+		DefendingSquad.Remove(unit);
+	}
+
+	AttackingSquad.Add(unit);
 }

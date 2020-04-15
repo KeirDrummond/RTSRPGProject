@@ -3,6 +3,7 @@
 
 #include "GameCharacter.h"
 #include "ProjectPlayerController.h"
+#include "ProjectAIController.h"
 #include "Engine.h"
 #include "AIController.h"
 #include "ProjectGameState.h"
@@ -193,6 +194,12 @@ void AGameCharacter::OnDeath()
 	UpdateAnimation(ECommandsEnum::CE_Dead);
 	SetLifeSpan(5.f);
 	GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");
+
+	AProjectAIController* AIplayer = Cast<AProjectAIController>(owningPlayer->GetPawn()->GetController());
+	if (AIplayer)
+	{
+		AIplayer->LostUnit(this);
+	}
 
 	OnDeathBP();
 }

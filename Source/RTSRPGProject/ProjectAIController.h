@@ -7,6 +7,7 @@
 #include "GamePlayer.h"
 #include "ProjectGameMode.h"
 #include "GameFramework/Controller.h"
+#include "GameCharacter.h"
 #include "ProjectAIController.generated.h"
 
 /**
@@ -21,8 +22,19 @@ public:
 
 	AProjectAIController();
 
-protected:
+	void LostUnit(AGameCharacter* unit);
+		
+	UFUNCTION(BlueprintCallable)
+		void CommandMoveSquadToLocation(TArray<AGameCharacter*> squad, FVector location);
 
-	virtual void BeginPlay() override;
-	
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AGameCharacter*> DefendingSquad;
+	UPROPERTY(BlueprintReadOnly)
+	TArray<AGameCharacter*> AttackingSquad;
+
+	UFUNCTION(BlueprintCallable)
+		void MoveToDefendingSquad(AGameCharacter* unit);
+	UFUNCTION(BlueprintCallable)
+		void MoveToAttackingSquad(AGameCharacter* unit);
+
 };
