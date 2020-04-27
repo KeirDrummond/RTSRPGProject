@@ -6,6 +6,7 @@
 #include "ProjectGameState.h"
 #include "GamePlayerState.h"
 #include "ProjectGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AGameBuilding::AGameBuilding()
@@ -94,9 +95,10 @@ bool AGameBuilding::BuyUnit(TSubclassOf<AGameCharacter> unit, int cost)
 AGameCharacter* AGameBuilding::CreateUnit(TSubclassOf<AGameCharacter> unit) {
 	FTransform transform = spawnPoint->GetComponentTransform();
 	transform.SetScale3D(FVector(1, 1, 1));
-	FActorSpawnParameters params;
-	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-	AGameCharacter* newUnit = GetWorld()->SpawnActor<AGameCharacter>(unit, transform, params);
+
+	AGameCharacter* newUnit = GetWorld()->SpawnActorDeferred<AGameCharacter>(unit, transform, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	newUnit->SetOwningPlayer(owningPlayer);
+	UGameplayStatics::FinishSpawningActor(newUnit, transform);
+
 	return newUnit;
 }

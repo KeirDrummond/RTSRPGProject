@@ -9,6 +9,7 @@ AGamePlayerState::AGamePlayerState()
 {
 	resources = 0;
 	resourceTimer = 5.f;
+	alive = true;
 }
 
 void AGamePlayerState::AddToUnits(AActor* unit)
@@ -19,6 +20,18 @@ void AGamePlayerState::AddToUnits(AActor* unit)
 	{
 		army.Add(armyUnit);
 	}
+	CalculateArmyPower();
+}
+
+void AGamePlayerState::RemoveFromUnits(AActor* unit)
+{
+	units.Remove(unit);
+	AGameCharacter* armyUnit = Cast<AGameCharacter>(unit);
+	if (armyUnit)
+	{
+		army.Remove(armyUnit);
+	}
+	CalculateArmyPower();
 }
 
 void AGamePlayerState::CalculateArmyPower()

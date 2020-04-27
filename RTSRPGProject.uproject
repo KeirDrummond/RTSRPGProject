@@ -33,10 +33,6 @@
 				"Linux",
 				"Mac"
 			]
-		},
-		{
-			"Name": "KantanDocGen",
-			"Enabled": false
 		}
 	]
 }

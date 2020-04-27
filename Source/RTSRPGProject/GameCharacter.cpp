@@ -7,6 +7,7 @@
 #include "Engine.h"
 #include "AIController.h"
 #include "ProjectGameState.h"
+#include "GamePlayerState.h"
 #include "GenericPlatform/GenericPlatformMath.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/GameMode.h"
@@ -16,9 +17,10 @@ AGameCharacter::AGameCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 	defaultOwner = 0;
 	alive = true;
-	currentCommand = ECommandsEnum::CE_Idle;
+	currentState = EUnitStateEnum::CE_Idle;
 }
 
 // Called when the game starts or when spawned
@@ -28,7 +30,10 @@ void AGameCharacter::BeginPlay()
 
 	AProjectGameState* const gamestate = GetWorld()->GetGameState<AProjectGameState>();
 	if (defaultOwner >= gamestate->PlayerArray.Num()) { defaultOwner = 0; }
-	owningPlayer = gamestate->PlayerArray[defaultOwner];
+	if (owningPlayer == NULL)
+	{
+		owningPlayer = gamestate->PlayerArray[defaultOwner];
+	}	
 
 	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
 	op->AddToUnits(this);
@@ -45,26 +50,14 @@ void AGameCharacter::BeginPlay()
 // Called every frame
 void AGameCharacter::Tick(float DeltaTime)
 {
-	DoCommand();
 	attackCooldown = FGenericPlatformMath::Max(attackCooldown - DeltaTime, 0.f);
+
 	Super::Tick(DeltaTime);
 }
 
 void AGameCharacter::SetOwningPlayer(APlayerState* player)
 {
 	owningPlayer = player;
-}
-
-void AGameCharacter::MoveToPosition(const FVector target) {
-	theAIController->MoveToLocation(
-		target,
-		100.f,
-		true,
-		true,
-		false,
-		true,
-		0,
-		true);
 }
 
 bool AGameCharacter::GetIsSelected()
@@ -87,94 +80,45 @@ void AGameCharacter::SetSelected(bool value)
 	selected = value;
 }
 
-// Commands. How the game character knows what it is supposed to do.
-
-void AGameCharacter::DoCommand()
+bool AGameCharacter::AttackTarget(AActor *target)
 {
-	if (currentCommand == ECommandsEnum::CE_Movement)
-	{
-		float const distance = FVector::Dist(currentDestination, GetActorLocation());
-		if (distance < 120.0f) {
-			// Upon arriving to the destination, become idle.
-			Idle();
-		}
-	}
-	else if (currentCommand == ECommandsEnum::CE_Attack)
-	{
-		// Repeats the attack command with new data.
-		AttackCommand(currentTarget);
-	}
-}
+	if (!alive) { return false; }
 
-void AGameCharacter::Idle() {
-	currentCommand = ECommandsEnum::CE_Idle;
-	UpdateAnimation(ECommandsEnum::CE_Idle);
-	theAIController->StopMovement();
-}
+	if (!target->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
+	IGameUnit* unit = Cast<IGameUnit>(target);
+	if (!unit->IsAlive()) { return false; }
 
-void AGameCharacter::MoveCommand(const FVector destination)
-{
-	currentCommand = ECommandsEnum::CE_Movement;
-	UpdateAnimation(ECommandsEnum::CE_Movement);
-	currentDestination = destination;
-	MoveToPosition(destination);
-}
-
-bool AGameCharacter::AttackCommand(AActor* target)
-{
-	if (!IsValid(target)) {
-		Idle();
-		return false;
-	}
-
-	if (target->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
-	{
-		IGameUnit* unit = Cast<IGameUnit>(target);
-		if (!unit->IsAlive())
-		{
-			Idle();
-			return false;
-		}
-	}
-
-	currentTarget = target;
-	currentCommand = ECommandsEnum::CE_Attack;
-
-	FVector myPos = this->GetActorLocation();
+	FVector myPos = GetActorLocation();
 	FVector targetPos = target->GetActorLocation();
-	
+
 	float distance = FVector::Distance(myPos, targetPos);
 
 	if (distance < attackRange)
 	{
-		theAIController->StopMovement();
-		AttackTarget(target);
-		UpdateAnimation(ECommandsEnum::CE_Attack);
-		const FRotator rotation = UKismetMathLibrary::FindLookAtRotation(myPos, targetPos);
-		SetActorRotation(rotation);
-	}
-	else
-	{
-		UpdateAnimation(ECommandsEnum::CE_Movement);
-		theAIController->MoveToLocation(targetPos);
-		currentDestination = targetPos;
-	}
-
-	return true;
-}
-
-void AGameCharacter::AttackTarget(AActor* target)
-{
-	UpdateAnimation(currentCommand);
-	if (attackCooldown <= 0)
-	{
-		if (target->GetClass()->ImplementsInterface(UGameUnit::StaticClass()))
+		if (attackCooldown <= 0)
 		{
-			IGameUnit* unit = Cast<IGameUnit>(target);
+			
 			unit->TakeDamage(attack);
 			attackCooldown = 1;
 		}
+
+		SetState(EUnitStateEnum::CE_Attack);
+		GetController()->StopMovement();
+		FRotator rotation = UKismetMathLibrary::FindLookAtRotation(myPos, targetPos);
+		rotation.Pitch = 0.f;
+		rotation.Roll = 0.f;
+		SetActorRotation(rotation);
+		return true;
 	}
+
+	SetState(EUnitStateEnum::CE_Idle);
+	return false;
+}
+
+void AGameCharacter::SetState(EUnitStateEnum state)
+{
+	currentState = state;
+	SetStateBP(state);
 }
 
 void AGameCharacter::TakeDamage(int32 damage)
@@ -190,16 +134,21 @@ void AGameCharacter::TakeDamage(int32 damage)
 void AGameCharacter::OnDeath()
 {
 	alive = false;
-	currentCommand = ECommandsEnum::CE_Dead;
-	UpdateAnimation(ECommandsEnum::CE_Dead);
+	GetController()->StopMovement();
+
+	SetState(EUnitStateEnum::CE_Dead);
 	SetLifeSpan(5.f);
 	GetCapsuleComponent()->SetCollisionProfileName("IgnoreOnlyPawn");
 
-	AProjectAIController* AIplayer = Cast<AProjectAIController>(owningPlayer->GetPawn()->GetController());
-	if (AIplayer)
+	AGamePlayerState* op = Cast<AGamePlayerState>(owningPlayer);
+	op->RemoveFromUnits(this);
+
+	AProjectPlayerController* humanPlayer = Cast<AProjectPlayerController>(owningPlayer->GetPawn()->GetController());
+	if (humanPlayer)
 	{
-		AIplayer->LostUnit(this);
+		humanPlayer->RemoveFromSelected(this);
 	}
 
 	OnDeathBP();
+	//DetachFromControllerPendingDestroy();
 }

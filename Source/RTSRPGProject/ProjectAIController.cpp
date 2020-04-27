@@ -2,6 +2,7 @@
 
 
 #include "ProjectAIController.h"
+#include "CharacterAIController.h"
 #include "ProjectGameMode.h"
 #include "Engine/World.h"
 
@@ -9,42 +10,18 @@ AProjectAIController::AProjectAIController(){
 	bWantsPlayerState = true;
 }
 
-void AProjectAIController::LostUnit(AGameCharacter* unit)
+void AProjectAIController::CommandMoveToLocation(AGameCharacter *unit, FVector location)
 {
-	if (DefendingSquad.Find(unit))
-	{
-		DefendingSquad.Remove(unit);
-	}
-	else if (AttackingSquad.Find(unit))
-	{
-		AttackingSquad.Remove(unit);
-	}
+	ACharacterAIController* controller = Cast<ACharacterAIController>(unit->GetController());
+	if (controller) { controller->MoveCommand(location); }
+
 }
 
-void AProjectAIController::CommandMoveSquadToLocation(TArray<AGameCharacter*> squad, FVector location)
+void AProjectAIController::CommandAttackMoveToLocation(AGameCharacter *unit, FVector location)
 {
-	for (AGameCharacter* unit : squad)
+	if (IsValid(unit))
 	{
-		unit->MoveCommand(location);
+		ACharacterAIController* controller = Cast<ACharacterAIController>(unit->GetController());
+		if (controller) { controller->AttackMoveCommand(location); }
 	}
-}
-
-void AProjectAIController::MoveToDefendingSquad(AGameCharacter* unit)
-{
-	if (AttackingSquad.Find(unit))
-	{
-		AttackingSquad.Remove(unit);
-	}
-
-	DefendingSquad.Add(unit);
-}
-
-void AProjectAIController::MoveToAttackingSquad(AGameCharacter* unit)
-{
-	if (DefendingSquad.Find(unit))
-	{
-		DefendingSquad.Remove(unit);
-	}
-
-	AttackingSquad.Add(unit);
 }

@@ -7,7 +7,6 @@
 #include "GameHUD.h"
 #include "GameCharacter.h"
 #include "GameBuilding.h"
-#include "GamePlayer.h"
 #include "ProjectGameMode.h"
 #include "GameFramework/Controller.h"
 #include "ProjectPlayerController.generated.h"

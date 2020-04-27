@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerState.h"
+#include "GameCharacter.h"
 #include "GamePlayerState.generated.h"
 
 /**
@@ -23,7 +24,7 @@ public:
     UPROPERTY(BlueprintReadOnly)
         TArray<AActor*> units;
     UPROPERTY(BlueprintReadOnly)
-        TArray<AActor*> army;
+        TArray<AGameCharacter*> army;
 
     float resourceTimer;
     bool SpendResources(int value);
@@ -32,8 +33,10 @@ public:
         int resources;
 
     void AddToUnits(AActor* unit);
+    void RemoveFromUnits(AActor* unit);
 
-    bool alive;
+    UPROPERTY(BlueprintReadOnly)
+        bool alive;
 
     UPROPERTY(BlueprintReadOnly)
         float ArmyPower;

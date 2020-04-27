@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "GameUnit.h"
 #include "AIController.h"
-#include "GamePlayerState.h"
 #include "GameCharacter.generated.h"
 
 UENUM(BlueprintType)
@@ -17,7 +16,7 @@ enum class PlayerID : uint8
 };
 
 UENUM(BlueprintType)
-enum class ECommandsEnum : uint8
+enum class EUnitStateEnum : uint8
 {
 	CE_Idle UMETA(DisplayName = "Idle"),
 	CE_Movement UMETA(DisplayName = "Movement"),
@@ -78,9 +77,6 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateColour();
 
-	// Uses the character's AI to navigate to a destination
-	void MoveToPosition(FVector target);
-
 	// Selection details
 	UFUNCTION(BlueprintPure)
 		bool GetIsSelected();
@@ -89,35 +85,33 @@ public:
 
 	APlayerState* GetOwningPlayer() override;
 
-	// Commands
-	void Idle();
-	void MoveCommand(const FVector destination);
-	bool AttackCommand(AActor* target);
-
 	void TakeDamage(int32 damage);
 
 	bool IsAlive() override;
 
 	UPROPERTY(BlueprintReadOnly)
-	bool alive;
+		bool alive;
 
-private:
+	bool AttackTarget(AActor* target);
+
+	void SetState(EUnitStateEnum state);
+
+protected:
+
+	UFUNCTION(BlueprintImplementableEvent)
+		void SetStateBP(EUnitStateEnum state);
 
 	bool selected;
 
 	AAIController* theAIController;
 
-	ECommandsEnum currentCommand;
-
-	// Called on frame updates to check if a new command needs to be done.
-	void DoCommand();
-
-	void AttackTarget(AActor* target);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+		EUnitStateEnum currentState;
 
 	float attackCooldown;
 
 	FVector currentDestination;
-	AActor* currentTarget;	
+	AActor* currentTarget;
 		
 	void OnDeath();
 
@@ -126,10 +120,12 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent)
 		void OnDeathBP();
 
-	UFUNCTION(BlueprintImplementableEvent)
-		void UpdateAnimation(ECommandsEnum command);
-
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 		void UpdateHealth();
+
+public:
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+		void SetHealthColour();
 
 };

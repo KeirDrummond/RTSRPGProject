@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "GamePlayer.h"
 #include "ProjectGameMode.h"
 #include "GameFramework/Controller.h"
 #include "GameCharacter.h"
@@ -22,19 +21,9 @@ public:
 
 	AProjectAIController();
 
-	void LostUnit(AGameCharacter* unit);
-		
 	UFUNCTION(BlueprintCallable)
-		void CommandMoveSquadToLocation(TArray<AGameCharacter*> squad, FVector location);
-
-	UPROPERTY(BlueprintReadOnly)
-	TArray<AGameCharacter*> DefendingSquad;
-	UPROPERTY(BlueprintReadOnly)
-	TArray<AGameCharacter*> AttackingSquad;
+		void CommandMoveToLocation(AGameCharacter *unit, FVector location);
 
 	UFUNCTION(BlueprintCallable)
-		void MoveToDefendingSquad(AGameCharacter* unit);
-	UFUNCTION(BlueprintCallable)
-		void MoveToAttackingSquad(AGameCharacter* unit);
-
+		void CommandAttackMoveToLocation(AGameCharacter *unit, FVector location);
 };

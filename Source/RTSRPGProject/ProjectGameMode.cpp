@@ -30,7 +30,7 @@ AProjectGameMode::AProjectGameMode()
 	AIPlayer = AIPlayerClass.Class;
 	
 	PrimaryActorTick.bCanEverTick = true;
-	resourceTimer = 5.f;
+	resourceTimer = 1.f;
 }
 
 void AProjectGameMode::StartPlay() {
@@ -52,8 +52,8 @@ void AProjectGameMode::Tick(float DeltaSeconds)
 		for (APlayerState* ps : GameState->PlayerArray)
 		{
 			AGamePlayerState* playerState = Cast<AGamePlayerState>(ps);
-			playerState->resources += 10;
-			resourceTimer = 5.f;
+			playerState->resources += 1;
+			resourceTimer = 1.f;
 		}
 	}	
 }

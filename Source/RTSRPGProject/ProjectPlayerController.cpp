@@ -4,17 +4,15 @@
 #include "ProjectPlayerController.h"
 #include "PlayerCamera.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "Runtime/Engine/Classes/Components/DecalComponent.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Engine/World.h"
 #include "Engine/Engine.h"
 #include "GameHUD.h"
 #include "ProjectGameMode.h"
+#include "CharacterAIController.h"
 
 AProjectPlayerController::AProjectPlayerController()
 {
 	bShowMouseCursor = true;
-	//DefaultMouseCursor = EMouseCursor::Crosshairs;
 	bEnableClickEvents = true;
 }
 
@@ -115,7 +113,7 @@ void AProjectPlayerController::OnClickReleased() {
 		IGameUnit* hitUnit = Cast<IGameUnit>(hit.GetActor());
 		if (hitUnit) {
 			APlayerState* player = hitUnit->GetOwningPlayer();
-			if (IsValid(player))
+			if (player)
 			{
 				if (hitUnit->GetOwningPlayer() == PlayerState)
 					AddToSelected(hitUnit);
@@ -174,7 +172,10 @@ void AProjectPlayerController::SetNewMoveDestination(const FVector DestLocation)
 	for (int32 i = 0; i <= unitArray.Num() - 1; i++)
 	{
 		AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
-		if (IsValid(unit)) { unit->MoveCommand(DestLocation); }
+		if (IsValid(unit)) { 
+			ACharacterAIController* controller = Cast<ACharacterAIController>(unit->GetController());
+			if (controller) { controller->MoveCommand(DestLocation); }			
+		}
 	}
 }
 
@@ -184,7 +185,10 @@ void AProjectPlayerController::SetNewAttackTarget(AActor* target)
 		for (int32 i = 0; i <= unitArray.Num() - 1; i++)
 		{
 			AGameCharacter* unit = Cast<AGameCharacter>(unitArray[i]);
-			if (IsValid(unit)) { unit->AttackCommand(target); }
+			if (IsValid(unit)) {
+				ACharacterAIController* controller = Cast<ACharacterAIController>(unit->GetController());
+				if (controller) { controller->AttackCommand(target); }				
+			}
 		}
 }
 
@@ -214,6 +218,8 @@ bool AProjectPlayerController::AddToSelected(IGameUnit* unit)
 {
 	UObject* theUnit = unit->_getUObject();
 	if (!theUnit->GetClass()->ImplementsInterface(UGameUnit::StaticClass())) { return false; }
+
+	if (!unit->IsAlive()) { return false; }
 
 	AGameCharacter* character = Cast<AGameCharacter>(unit);
 	if (character) { character->SetSelected(true); }
