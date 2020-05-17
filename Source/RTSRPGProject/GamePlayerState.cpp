@@ -19,6 +19,13 @@ void AGamePlayerState::AddToUnits(AActor* unit)
 	if (armyUnit)
 	{
 		army.Add(armyUnit);
+
+		if (IsValid(GetPawn())) {
+			AProjectAIController* AIC = Cast<AProjectAIController>(GetPawn()->GetController());
+			if (AIC) {
+				AIC->NewUnit(armyUnit);
+			}
+		}
 	}
 	CalculateArmyPower();
 }
@@ -29,6 +36,12 @@ void AGamePlayerState::RemoveFromUnits(AActor* unit)
 	AGameCharacter* armyUnit = Cast<AGameCharacter>(unit);
 	if (armyUnit)
 	{
+		if (IsValid(GetPawn())) {
+			AProjectAIController* AIC = Cast<AProjectAIController>(GetPawn()->GetController());
+			if (AIC) {
+				AIC->NewUnit(armyUnit);
+			}
+		}
 		army.Remove(armyUnit);
 	}
 	CalculateArmyPower();

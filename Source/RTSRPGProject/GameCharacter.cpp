@@ -150,5 +150,4 @@ void AGameCharacter::OnDeath()
 	}
 
 	OnDeathBP();
-	//DetachFromControllerPendingDestroy();
 }

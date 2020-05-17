@@ -252,8 +252,12 @@ bool AProjectPlayerController::RemoveFromSelected(IGameUnit* unit)
 
 bool AProjectPlayerController::RemoveAllFromSelected()
 {
-	for (int32 i = unitArray.Num() - 1; i >= 0; i--) { 
-		RemoveFromSelected(unitArray[i]); }
+	for (int32 i = unitArray.Num() - 1; i >= 0; i--) {
+		if (i < unitArray.Num())
+		{
+			RemoveFromSelected(unitArray[i]);
+		}
+	}
 	unitArray.Empty();
 
 	return true;
