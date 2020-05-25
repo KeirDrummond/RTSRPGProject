@@ -9,13 +9,6 @@
 #include "GameCharacter.generated.h"
 
 UENUM(BlueprintType)
-enum class PlayerID : uint8
-{
-	Player1 UMETA(DisplayName = "Player 1"),
-	Player2 UMETA(DisplayName = "Player 2")
-};
-
-UENUM(BlueprintType)
 enum class EUnitStateEnum : uint8
 {
 	CE_Idle UMETA(DisplayName = "Idle"),

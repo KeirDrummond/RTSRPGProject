@@ -52,7 +52,7 @@ public:
 	// Character creation function
 
 	UFUNCTION(BlueprintCallable)
-		bool BuyUnit(TSubclassOf<AGameCharacter> unit, int cost);
+		bool BuyUnit(TSubclassOf<AGameCharacter> unit, int32 cost);
 
 	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType="ObjClass"))
 		AGameCharacter* CreateUnit(TSubclassOf<AGameCharacter> unit);

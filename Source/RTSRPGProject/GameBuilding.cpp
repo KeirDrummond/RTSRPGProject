@@ -80,7 +80,7 @@ void AGameBuilding::TakeDamage(int32 damage)
 	}
 }
 
-bool AGameBuilding::BuyUnit(TSubclassOf<AGameCharacter> unit, int cost)
+bool AGameBuilding::BuyUnit(TSubclassOf<AGameCharacter> unit, int32 cost)
 {
 	AGamePlayerState *ps = Cast<AGamePlayerState>(GetOwningPlayer());
 	if (ps->SpendResources(cost))

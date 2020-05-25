@@ -139,7 +139,8 @@ void AProjectPlayerController::OnClickReleased() {
 }
 
 void AProjectPlayerController::MoveCamera() {
-	float dirX, dirY = 0;
+	float dirX = 0;
+	float dirY = 0;
 
 	float x, y;
 	GetMousePosition(x, y);
